@@ -1,4 +1,4 @@
-# LeviLamina Plugin Template
+# LeviLogger
 
 LeviLamina BDS Player Behavior Logger
 
