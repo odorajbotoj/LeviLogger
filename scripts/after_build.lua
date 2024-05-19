@@ -102,6 +102,10 @@ function pack_plugin(target,plugin_define)
             os.cp(oripdbfile, pdbfile)
         end
 
+        -- Copy i18n files.
+        local langfile = path.join(os.projectdir(), "src", "lang")
+        os.cp(langfile, path.join(outputdir, "lang"))
+
         formattedmanifest = string_formatter(manifest, plugin_define)
         io.writefile(manifestfile,formattedmanifest)
         cprint("${bright green}[Plugin Packer]: ${reset}plugin already generated to " .. outputdir)
