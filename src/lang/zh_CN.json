@@ -1,0 +1,75 @@
+{
+    "plugin": {
+        "cannotOpenLogFile": "无法打开Log文件",
+        "welcome": "欢迎使用LeviLogger"
+    },
+    "log": {
+        "title": {
+            "year": "年",
+            "month": "月",
+            "day": "日",
+            "hour": "时",
+            "minute": "分",
+            "second": "秒",
+            "millisecond": "毫秒",
+            "self": "主体",
+            "dim": "维度",
+            "x": "X",
+            "y": "Y",
+            "z": "Z",
+            "event": "事件",
+            "selfUUID": "主体UUID",
+            "target": "目标",
+            "targetUUID": "目标UUID",
+            "tx": "目标X",
+            "ty": "目标Y",
+            "tz": "目标Z",
+            "info": "附加信息"
+        },
+        "info": {
+            "newPerm": "新权限等级",
+            "message": "信息",
+            "source": "源",
+            "face": "面",
+            "item": "物品",
+            "clickPos": "被点击的浮点位置"
+        }
+    },
+    "dim": {
+        "0": "主世界",
+        "1": "下界",
+        "2": "末地"
+    },
+    "side": {
+        "0": "下",
+        "1": "上",
+        "2": "北",
+        "3": "南",
+        "4": "西",
+        "5": "东"
+    },
+    "event": {
+        "PlayerAddExperienceEvent": "玩家获得经验",
+        "PlayerAttackEvent": "玩家攻击实体",
+        "PlayerChangePermEvent": "玩家权限变更",
+        "PlayerChatEvent": "玩家发送聊天信息",
+        "PlayerConnectEvent": "玩家开始连接服务器",
+        "PlayerDestroyBlockEvent": "玩家破坏方块完成",
+        "PlayerDieEvent": "玩家死亡",
+        "PlayerInteractBlockEvent": "方块接受玩家互动",
+        "PlayerJoinEvent": "玩家进入游戏",
+        "PlayerJumpEvent": "玩家跳跃",
+        "PlayerLeaveEvent": "玩家离开游戏",
+        "PlayerPickUpItemEvent": "玩家捡起物品",
+        "PlayerPlacingBlockEvent": "玩家尝试放置方块",
+        "PlayerPlacedBlockEvent": "玩家放置方块",
+        "PlayerRespawnEvent": "玩家重生",
+        "PlayerSneakingEvent": "玩家进入潜行状态",
+        "PlayerSneakedEvent": "玩家退出潜行状态",
+        "PlayerSprintingEvent": "玩家进入疾跑状态",
+        "PlayerSprintedEvent": "玩家退出疾跑状态",
+        "PlayerSwingEvent": "玩家挥手(Swing)",
+        "PlayerUseItemEvent": "玩家使用物品",
+        "PlayerUseItemOnEvent": "玩家对方块使用物品"
+    }
+}
