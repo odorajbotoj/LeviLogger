@@ -13,7 +13,7 @@ struct EventStruct {
 struct Config {
     int                    version                  = 1;
     std::string            locateName               = "zh_CN";
-    unsigned long long int maxLine                  = 2000;
+    unsigned long long int maxLine                  = 20000;
     ::EventStruct          playerAddExperienceEvent = {};
     ::EventStruct          playerAttackEvent        = {};
     ::EventStruct          playerChangePermEvent    = {};
