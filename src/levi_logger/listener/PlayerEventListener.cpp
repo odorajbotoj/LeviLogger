@@ -64,7 +64,7 @@ ll::event::ListenerPtr playerUseItemOnEventListener;
 
 namespace levi_logger::listener {
 
-void addListener(Config& config, levi_logger::logger::Logger& logger) {
+void addPlayerEventListener(Config& config, levi_logger::logger::Logger& logger) {
     auto& eventBus = ll::event::EventBus::getInstance();
 
     if (config.playerAddExperienceEvent.log) {
@@ -645,7 +645,7 @@ void addListener(Config& config, levi_logger::logger::Logger& logger) {
     }
 }
 
-void removeListener() {
+void removePlayerEventListener() {
     auto& eventBus = ll::event::EventBus::getInstance();
     eventBus.removeListener(::playerAddExperienceEventListener);
     eventBus.removeListener(::playerAttackEventListener);

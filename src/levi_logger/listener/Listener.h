@@ -19,7 +19,7 @@ const PlayerEventBaseData getPlayerEventBaseData(ll::event::PlayerEvent&);
 
 namespace levi_logger::listener {
 
-void addListener(Config&, levi_logger::logger::Logger&);
-void removeListener();
+void addPlayerEventListener(Config&, levi_logger::logger::Logger&);
+void removePlayerEventListener();
 
 } // namespace levi_logger::listener

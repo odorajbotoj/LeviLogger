@@ -55,14 +55,14 @@ bool LeviLogger::load() {
 }
 
 bool LeviLogger::enable() {
-    levi_logger::listener::addListener(config, fileLogger);
+    levi_logger::listener::addPlayerEventListener(config, fileLogger);
     levi_logger::command::regCmd(config.locateName, fileLogger);
 
     return true;
 }
 
 bool LeviLogger::disable() {
-    levi_logger::listener::removeListener();
+    levi_logger::listener::removePlayerEventListener();
 
     return true;
 }
