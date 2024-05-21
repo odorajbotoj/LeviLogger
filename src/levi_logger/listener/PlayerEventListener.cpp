@@ -3,7 +3,6 @@
 #include "levi_logger/logger/Logger.h"
 
 #include "ll/api/i18n/I18n.h"
-#include "ll/api/service/Bedrock.h"
 #include "ll/api/utils/WinUtils.h"
 
 #include "ll/api/event/EventBus.h"
@@ -214,13 +213,10 @@ void addListener(Config& config, levi_logger::logger::Logger& logger) {
     if (config.playerDestroyBlockEvent.log) {
         ::playerDestroyBlockEventListener = eventBus.emplaceListener<ll::event::PlayerDestroyBlockEvent>(
             [&logger, &config](ll::event::PlayerDestroyBlockEvent& event) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pebd  = getPlayerEventBaseData(event);
-                auto                    bpos  = event.pos();
-                const auto&             block = ll::service::getLevel()
-                                        ->getDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(bpos);
+                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                const auto              pebd = getPlayerEventBaseData(event);
+                const auto              bpos = event.pos();
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 logger.log(
                     config.locateName,
                     config.playerDestroyBlockEvent.noOutputContent,
@@ -244,11 +240,9 @@ void addListener(Config& config, levi_logger::logger::Logger& logger) {
     if (config.playerDieEvent.log) {
         ::playerDieEventListener =
             eventBus.emplaceListener<ll::event::PlayerDieEvent>([&logger, &config](ll::event::PlayerDieEvent& event) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pebd  = getPlayerEventBaseData(event);
-                const auto              actor = ll::service::getLevel()
-                                       ->getDimension(event.self().getDimensionId())
-                                       ->fetchEntity(event.source().getEntityUniqueID(), false);
+                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                const auto              pebd = getPlayerEventBaseData(event);
+                const auto actor = event.self().getDimension().fetchEntity(event.source().getEntityUniqueID(), false);
                 logger.log(
                     config.locateName,
                     config.playerDieEvent.noOutputContent,
@@ -274,13 +268,10 @@ void addListener(Config& config, levi_logger::logger::Logger& logger) {
     if (config.playerInteractBlockEvent.log) {
         ::playerInteractBlockEventListener = eventBus.emplaceListener<ll::event::PlayerInteractBlockEvent>(
             [&logger, &config](ll::event::PlayerInteractBlockEvent& event) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pebd  = getPlayerEventBaseData(event);
-                auto                    bpos  = event.pos();
-                const auto&             block = ll::service::getLevel()
-                                        ->getDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(bpos);
+                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                const auto              pebd = getPlayerEventBaseData(event);
+                const auto              bpos = event.pos();
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 logger.log(
                     config.locateName,
                     config.playerInteractBlockEvent.noOutputContent,
@@ -417,10 +408,7 @@ void addListener(Config& config, levi_logger::logger::Logger& logger) {
                     ++pos.x;
                     break;
                 }
-                const auto& block = ll::service::getLevel()
-                                        ->getDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(pos);
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
                 logger.log(
                     config.locateName,
                     config.playerPlacingBlockEvent.noOutputContent,
@@ -446,13 +434,10 @@ void addListener(Config& config, levi_logger::logger::Logger& logger) {
     if (config.playerPlacedBlockEvent.log) {
         ::playerPlacedBlockEventListener = eventBus.emplaceListener<ll::event::PlayerPlacedBlockEvent>(
             [&logger, &config](ll::event::PlayerPlacedBlockEvent& event) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pebd  = getPlayerEventBaseData(event);
-                auto                    bpos  = event.pos();
-                const auto&             block = ll::service::getLevel()
-                                        ->getDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(bpos);
+                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                const auto              pebd = getPlayerEventBaseData(event);
+                const auto              bpos = event.pos();
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 logger.log(
                     config.locateName,
                     config.playerPlacedBlockEvent.noOutputContent,
@@ -625,15 +610,12 @@ void addListener(Config& config, levi_logger::logger::Logger& logger) {
     if (config.playerUseItemOnEvent.log) {
         ::playerUseItemOnEventListener = eventBus.emplaceListener<ll::event::PlayerUseItemOnEvent>(
             [&logger, &config](ll::event::PlayerUseItemOnEvent& event) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pebd  = getPlayerEventBaseData(event);
-                const auto              bpos  = event.blockPos();
-                const auto&             block = ll::service::getLevel()
-                                        ->getDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(bpos);
-                const auto fpos = event.clickPos();
-                const auto it   = event.item();
+                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                const auto              pebd = getPlayerEventBaseData(event);
+                const auto              bpos = event.blockPos();
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
+                const auto  fpos  = event.clickPos();
+                const auto  it    = event.item();
                 logger.log(
                     config.locateName,
                     config.playerUseItemOnEvent.noOutputContent,
