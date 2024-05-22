@@ -1,4 +1,5 @@
 #include "levi_logger/Config.h"
+#include "levi_logger/LeviLogger.h"
 #include "levi_logger/listener/Listener.h"
 #include "levi_logger/logger/Logger.h"
 
@@ -35,6 +36,7 @@
 #include "mc/world/level/block/Block.h"
 #include "mc/world/level/dimension/Dimension.h"
 
+#include <format>
 #include <string>
 
 namespace {
@@ -64,49 +66,46 @@ ll::event::ListenerPtr playerUseItemOnEventListener;
 
 namespace levi_logger::listener {
 
-void addPlayerEventListener(Config& config, levi_logger::logger::Logger& logger) {
+void addEventListener() {
     auto& eventBus = ll::event::EventBus::getInstance();
 
     if (config.playerAddExperienceEvent.log) {
-        ::playerAddExperienceEventListener = eventBus.emplaceListener<ll::event::PlayerAddExperienceEvent>(
-            [&logger, &config](ll::event::PlayerAddExperienceEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+        ::playerAddExperienceEventListener =
+            eventBus.emplaceListener<ll::event::PlayerAddExperienceEvent>([](ll::event::PlayerAddExperienceEvent& event
+                                                                          ) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerAddExperienceEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerAddExperienceEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
-            }
-        );
+            });
     }
 
     if (config.playerAttackEvent.log) {
         ::playerAttackEventListener =
-            eventBus.emplaceListener<ll::event::PlayerAttackEvent>([&logger,
-                                                                    &config](ll::event::PlayerAttackEvent& event) {
+            eventBus.emplaceListener<ll::event::PlayerAttackEvent>([](ll::event::PlayerAttackEvent& event) {
                 std::pair<std::tm, int> ti        = ll::win_utils::getLocalTime();
-                const auto              pebd      = getPlayerEventBaseData(event);
+                const auto              pbd       = getPlayerBaseData(event.self());
                 auto&                   target    = event.target();
                 auto                    targetPos = target.getFeetPos();
-                logger.log(
-                    config.locateName,
+                fileLogger.log(
                     config.playerAttackEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerAttackEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     target.getNameTag() + "(" + target.getTypeName() + ")",
                     std::to_string(targetPos.x),
                     std::to_string(targetPos.y),
@@ -116,11 +115,11 @@ void addPlayerEventListener(Config& config, levi_logger::logger::Logger& logger)
     }
 
     if (config.playerChangePermEvent.log) {
-        ::playerChangePermEventListener = eventBus.emplaceListener<ll::event::PlayerChangePermEvent>(
-            [&logger, &config](ll::event::PlayerChangePermEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                int                     np   = 0;
+        ::playerChangePermEventListener =
+            eventBus.emplaceListener<ll::event::PlayerChangePermEvent>([](ll::event::PlayerChangePermEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                int                     np  = 0;
                 switch (event.newPerm()) {
                 case CommandPermissionLevel::Any:
                     np = 0;
@@ -141,251 +140,242 @@ void addPlayerEventListener(Config& config, levi_logger::logger::Logger& logger)
                     np = 5;
                     break;
                 }
-                logger.log(
-                    config.locateName,
+                fileLogger.log(
                     config.playerChangePermEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerChangePermEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     "",
                     "",
                     "",
                     "",
-                    std::string{ll::i18n::getInstance()->get("log.info.newPerm", config.locateName)} + ": "
-                        + std::to_string(np)
+                    std::format("{}: {}", ll::i18n::getInstance()->get("log.info.newPerm", config.locateName), np)
                 );
-            }
-        );
+            });
     }
 
     if (config.playerChatEvent.log) {
         ::playerChatEventListener =
-            eventBus.emplaceListener<ll::event::PlayerChatEvent>([&logger, &config](ll::event::PlayerChatEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerChatEvent>([](ll::event::PlayerChatEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerChatEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerChatEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     "",
                     "",
                     "",
                     "",
-                    std::string{ll::i18n::getInstance()->get("log.info.message", config.locateName)} + ": "
-                        + event.message()
+                    std::format(
+                        "{}: {}",
+                        ll::i18n::getInstance()->get("log.info.message", config.locateName),
+                        event.message()
+                    )
                 );
             });
     }
 
     if (config.playerConnectEvent.log) {
         ::playerConnectEventListener =
-            eventBus.emplaceListener<ll::event::PlayerConnectEvent>([&logger,
-                                                                     &config](ll::event::PlayerConnectEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerConnectEvent>([](ll::event::PlayerConnectEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerConnectEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerConnectEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
             });
     }
 
     if (config.playerDestroyBlockEvent.log) {
-        ::playerDestroyBlockEventListener = eventBus.emplaceListener<ll::event::PlayerDestroyBlockEvent>(
-            [&logger, &config](ll::event::PlayerDestroyBlockEvent& event) {
+        ::playerDestroyBlockEventListener =
+            eventBus.emplaceListener<ll::event::PlayerDestroyBlockEvent>([](ll::event::PlayerDestroyBlockEvent& event) {
                 std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
+                const auto              pbd  = getPlayerBaseData(event.self());
                 const auto              bpos = event.pos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
-                logger.log(
-                    config.locateName,
+                fileLogger.log(
                     config.playerDestroyBlockEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerDestroyBlockEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     block.buildDescriptionName() + "(" + block.getTypeName() + ")",
                     std::to_string(bpos.x),
                     std::to_string(bpos.y),
                     std::to_string(bpos.z)
                 );
-            }
-        );
+            });
     }
 
     if (config.playerDieEvent.log) {
         ::playerDieEventListener =
-            eventBus.emplaceListener<ll::event::PlayerDieEvent>([&logger, &config](ll::event::PlayerDieEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
+            eventBus.emplaceListener<ll::event::PlayerDieEvent>([](ll::event::PlayerDieEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
                 const auto actor = event.self().getDimension().fetchEntity(event.source().getEntityUniqueID(), false);
-                logger.log(
-                    config.locateName,
+                fileLogger.log(
                     config.playerDieEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerDieEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     "",
                     "",
                     "",
                     "",
-                    actor ? std::string{ll::i18n::getInstance()->get("log.info.source", config.locateName)} + ": "
-                                + actor->getNameTag() + "(" + actor->getTypeName() + ")"
+                    actor ? std::format(
+                        "{}: {}({})",
+                        ll::i18n::getInstance()->get("log.info.source", config.locateName),
+                        actor->getNameTag(),
+                        actor->getTypeName()
+                    )
                           : ""
                 );
             });
     }
 
     if (config.playerInteractBlockEvent.log) {
-        ::playerInteractBlockEventListener = eventBus.emplaceListener<ll::event::PlayerInteractBlockEvent>(
-            [&logger, &config](ll::event::PlayerInteractBlockEvent& event) {
+        ::playerInteractBlockEventListener =
+            eventBus.emplaceListener<ll::event::PlayerInteractBlockEvent>([](ll::event::PlayerInteractBlockEvent& event
+                                                                          ) {
                 std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
+                const auto              pbd  = getPlayerBaseData(event.self());
                 const auto              bpos = event.pos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
-                logger.log(
-                    config.locateName,
+                fileLogger.log(
                     config.playerInteractBlockEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerInteractBlockEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     block.buildDescriptionName() + "(" + block.getTypeName() + ")",
                     std::to_string(bpos.x),
                     std::to_string(bpos.y),
                     std::to_string(bpos.z)
                 );
-            }
-        );
+            });
     }
 
     if (config.playerJoinEvent.log) {
         ::playerJoinEventListener =
-            eventBus.emplaceListener<ll::event::PlayerJoinEvent>([&logger, &config](ll::event::PlayerJoinEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerJoinEvent>([](ll::event::PlayerJoinEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerJoinEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerJoinEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
             });
     }
 
     if (config.playerJumpEvent.log) {
         ::playerJumpEventListener =
-            eventBus.emplaceListener<ll::event::PlayerJumpEvent>([&logger, &config](ll::event::PlayerJumpEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerJumpEvent>([](ll::event::PlayerJumpEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerJumpEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerJumpEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
             });
     }
 
     if (config.playerLeaveEvent.log) {
         ::playerLeaveEventListener =
-            eventBus.emplaceListener<ll::event::PlayerLeaveEvent>([&logger,
-                                                                   &config](ll::event::PlayerLeaveEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerLeaveEvent>([](ll::event::PlayerLeaveEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerLeaveEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerLeaveEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
             });
     }
 
     if (config.playerPickUpItemEvent.log) {
-        ::playerPickUpItemEventListener = eventBus.emplaceListener<ll::event::PlayerPickUpItemEvent>(
-            [&logger, &config](ll::event::PlayerPickUpItemEvent& event) {
+        ::playerPickUpItemEventListener =
+            eventBus.emplaceListener<ll::event::PlayerPickUpItemEvent>([](ll::event::PlayerPickUpItemEvent& event) {
                 std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pebd  = getPlayerEventBaseData(event);
+                const auto              pbd   = getPlayerBaseData(event.self());
                 const auto&             ita   = event.itemActor();
                 const auto              itafp = ita.getFeetPos();
                 const auto              it    = ita.item();
-                logger.log(
-                    config.locateName,
+                fileLogger.log(
                     config.playerPickUpItemEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerPickUpItemEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     it.getCustomName().empty() ? it.getName() : it.getCustomName() + "(" + it.getTypeName() + ")",
                     std::to_string(itafp.x),
                     std::to_string(itafp.y),
                     std::to_string(itafp.z)
                 );
-            }
-        );
+            });
     }
 
     if (config.playerPlacingBlockEvent.log) {
-        ::playerPlacingBlockEventListener = eventBus.emplaceListener<ll::event::PlayerPlacingBlockEvent>(
-            [&logger, &config](ll::event::PlayerPlacingBlockEvent& event) {
+        ::playerPlacingBlockEventListener =
+            eventBus.emplaceListener<ll::event::PlayerPlacingBlockEvent>([](ll::event::PlayerPlacingBlockEvent& event) {
                 std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
+                const auto              pbd  = getPlayerBaseData(event.self());
                 auto                    pos  = event.pos();
                 const auto              face = event.face();
                 switch (face) {
@@ -409,243 +399,230 @@ void addPlayerEventListener(Config& config, levi_logger::logger::Logger& logger)
                     break;
                 }
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
-                logger.log(
-                    config.locateName,
+                fileLogger.log(
                     config.playerPlacingBlockEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerPlacingBlockEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     block.buildDescriptionName() + "(" + block.getTypeName() + ")",
                     std::to_string(pos.x),
                     std::to_string(pos.y),
                     std::to_string(pos.z),
-                    std::string{ll::i18n::getInstance()->get("log.info.face", config.locateName)} + ": "
-                        + std::string{ll::i18n::getInstance()->get("side." + std::to_string(face), config.locateName)}
+                    std::format(
+                        "{}: {}",
+                        ll::i18n::getInstance()->get("log.info.face", config.locateName),
+                        ll::i18n::getInstance()->get("side." + std::to_string(face), config.locateName)
+                    )
                 );
-            }
-        );
+            });
     }
 
     if (config.playerPlacedBlockEvent.log) {
-        ::playerPlacedBlockEventListener = eventBus.emplaceListener<ll::event::PlayerPlacedBlockEvent>(
-            [&logger, &config](ll::event::PlayerPlacedBlockEvent& event) {
+        ::playerPlacedBlockEventListener =
+            eventBus.emplaceListener<ll::event::PlayerPlacedBlockEvent>([](ll::event::PlayerPlacedBlockEvent& event) {
                 std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
+                const auto              pbd  = getPlayerBaseData(event.self());
                 const auto              bpos = event.pos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
-                logger.log(
-                    config.locateName,
+                fileLogger.log(
                     config.playerPlacedBlockEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerPlacedBlockEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     block.buildDescriptionName() + "(" + block.getTypeName() + ")",
                     std::to_string(bpos.x),
                     std::to_string(bpos.y),
                     std::to_string(bpos.z)
                 );
-            }
-        );
+            });
     }
 
     if (config.playerRespawnEvent.log) {
         ::playerRespawnEventListener =
-            eventBus.emplaceListener<ll::event::PlayerRespawnEvent>([&logger,
-                                                                     &config](ll::event::PlayerRespawnEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerRespawnEvent>([](ll::event::PlayerRespawnEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerRespawnEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerRespawnEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
             });
     }
 
     if (config.playerSneakingEvent.log) {
         ::playerSneakingEventListener =
-            eventBus.emplaceListener<ll::event::PlayerSneakingEvent>([&logger,
-                                                                      &config](ll::event::PlayerSneakingEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerSneakingEvent>([](ll::event::PlayerSneakingEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerSneakingEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerSneakingEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
             });
     }
 
     if (config.playerSneakedEvent.log) {
         ::playerSneakedEventListener =
-            eventBus.emplaceListener<ll::event::PlayerSneakedEvent>([&logger,
-                                                                     &config](ll::event::PlayerSneakedEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerSneakedEvent>([](ll::event::PlayerSneakedEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerSneakedEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerSneakedEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
             });
     }
 
     if (config.playerSprintingEvent.log) {
-        ::playerSprintingEventListener = eventBus.emplaceListener<ll::event::PlayerSprintingEvent>(
-            [&logger, &config](ll::event::PlayerSprintingEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+        ::playerSprintingEventListener =
+            eventBus.emplaceListener<ll::event::PlayerSprintingEvent>([](ll::event::PlayerSprintingEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerSprintingEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerSprintingEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
-            }
-        );
+            });
     }
 
     if (config.playerSprintedEvent.log) {
         ::playerSprintedEventListener =
-            eventBus.emplaceListener<ll::event::PlayerSprintedEvent>([&logger,
-                                                                      &config](ll::event::PlayerSprintedEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerSprintedEvent>([](ll::event::PlayerSprintedEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerSprintedEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerSprintedEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
             });
     }
 
     if (config.playerSwingEvent.log) {
         ::playerSwingEventListener =
-            eventBus.emplaceListener<ll::event::PlayerSwingEvent>([&logger,
-                                                                   &config](ll::event::PlayerSwingEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerSwingEvent>([](ll::event::PlayerSwingEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                fileLogger.log(
                     config.playerSwingEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerSwingEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z
                 );
             });
     }
 
     if (config.playerUseItemEvent.log) {
         ::playerUseItemEventListener =
-            eventBus.emplaceListener<ll::event::PlayerUseItemEvent>([&logger,
-                                                                     &config](ll::event::PlayerUseItemEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
-                const auto              it   = event.item();
-                logger.log(
-                    config.locateName,
+            eventBus.emplaceListener<ll::event::PlayerUseItemEvent>([](ll::event::PlayerUseItemEvent& event) {
+                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                const auto              pbd = getPlayerBaseData(event.self());
+                const auto              it  = event.item();
+                fileLogger.log(
                     config.playerUseItemEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerUseItemEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     it.getCustomName().empty() ? it.getName() : it.getCustomName() + "(" + it.getTypeName() + ")"
                 );
             });
     }
 
     if (config.playerUseItemOnEvent.log) {
-        ::playerUseItemOnEventListener = eventBus.emplaceListener<ll::event::PlayerUseItemOnEvent>(
-            [&logger, &config](ll::event::PlayerUseItemOnEvent& event) {
+        ::playerUseItemOnEventListener =
+            eventBus.emplaceListener<ll::event::PlayerUseItemOnEvent>([](ll::event::PlayerUseItemOnEvent& event) {
                 std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pebd = getPlayerEventBaseData(event);
+                const auto              pbd  = getPlayerBaseData(event.self());
                 const auto              bpos = event.blockPos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 const auto  fpos  = event.clickPos();
                 const auto  it    = event.item();
-                logger.log(
-                    config.locateName,
+                fileLogger.log(
                     config.playerUseItemOnEvent.noOutputContent,
                     ti,
-                    pebd.self,
+                    pbd.self,
                     "PlayerUseItemOnEvent",
-                    pebd.UUID,
-                    pebd.dim,
-                    pebd.x,
-                    pebd.y,
-                    pebd.z,
+                    pbd.UUID,
+                    pbd.dim,
+                    pbd.x,
+                    pbd.y,
+                    pbd.z,
                     block.buildDescriptionName() + "(" + block.getTypeName() + ")",
                     std::to_string(bpos.x),
                     std::to_string(bpos.y),
                     std::to_string(bpos.z),
-                    std::string{ll::i18n::getInstance()->get("log.info.item", config.locateName)} + ": "
-                        + (it.getCustomName().empty() ? it.getName() : it.getCustomName()) + "(" + it.getTypeName()
-                        + "); " + std::string{ll::i18n::getInstance()->get("log.info.face", config.locateName)} + ": "
-                        + std::string{ll::i18n::getInstance()
-                                          ->get("side." + std::to_string((schar)event.face()), config.locateName)}
-                        + "; " + std::string{ll::i18n::getInstance()->get("log.info.clickPos", config.locateName)}
-                        + ": " + std::to_string(fpos.x) + " " + std::to_string(fpos.y) + " " + std::to_string(fpos.z)
-
+                    std::format(
+                        "{}: {}({}); {}: {}; {}: {} {} {}",
+                        ll::i18n::getInstance()->get("log.info.item", config.locateName),
+                        it.getCustomName().empty() ? it.getName() : it.getCustomName(),
+                        it.getTypeName(),
+                        ll::i18n::getInstance()->get("log.info.face", config.locateName),
+                        ll::i18n::getInstance()->get("side." + std::to_string((schar)event.face()), config.locateName),
+                        ll::i18n::getInstance()->get("log.info.clickPos", config.locateName),
+                        fpos.x,
+                        fpos.y,
+                        fpos.z
+                    )
                 );
-            }
-        );
+            });
     }
 }
 
-void removePlayerEventListener() {
+void removeEventListener() {
     auto& eventBus = ll::event::EventBus::getInstance();
     eventBus.removeListener(::playerAddExperienceEventListener);
     eventBus.removeListener(::playerAttackEventListener);

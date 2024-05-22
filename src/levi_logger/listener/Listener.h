@@ -1,13 +1,10 @@
 #pragma once
 
-#include "levi_logger/Config.h"
-#include "levi_logger/logger/Logger.h"
-
-#include "ll/api/event/player/PlayerEvent.h"
+#include "mc/world/actor/player/Player.h"
 
 #include <string>
 
-struct PlayerEventBaseData {
+struct PlayerBaseData {
     std::string self; // self
     std::string UUID; // selfUUID
     std::string dim;  // dim
@@ -15,11 +12,14 @@ struct PlayerEventBaseData {
     std::string y;    // y
     std::string z;    // z
 };
-const PlayerEventBaseData getPlayerEventBaseData(ll::event::PlayerEvent&);
+const PlayerBaseData getPlayerBaseData(Player&);
 
 namespace levi_logger::listener {
 
-void addPlayerEventListener(Config&, levi_logger::logger::Logger&);
-void removePlayerEventListener();
+void addEventListener();
+void removeEventListener();
+
+void addEventHookListener();
+void removeEventHookListener();
 
 } // namespace levi_logger::listener

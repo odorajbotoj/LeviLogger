@@ -1,6 +1,12 @@
 #pragma once
 
+#include "levi_logger/Config.h"
+#include "levi_logger/logger/Logger.h"
+
 #include "ll/api/plugin/NativePlugin.h"
+
+extern Config                      config;
+extern levi_logger::logger::Logger fileLogger;
 
 namespace levi_logger {
 
