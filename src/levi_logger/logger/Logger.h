@@ -21,12 +21,11 @@ private:
 public:
     Logger();
     ~Logger();
-    bool rotate(std::string_view);
+    bool rotate();
     void setFilePath(std::filesystem::path);
     void setMaxLine(unsigned long long int);
     void
-    log(std::string_view,          // config
-        std::vector<std::string>&, // noOutputContent
+    log(std::vector<std::string>&, // noOutputContent
         std::pair<std::tm, int>,   // time
         std::string,               // self
         std::string,               // event

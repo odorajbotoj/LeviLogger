@@ -1,4 +1,5 @@
 #include "levi_logger/logger/Logger.h"
+#include "levi_logger/LeviLogger.h"
 
 #include "ll/api/i18n/I18n.h"
 #include "ll/api/utils/WinUtils.h"
@@ -13,7 +14,7 @@
 
 namespace levi_logger::logger {
 
-bool Logger::rotate(std::string_view locateName) {
+bool Logger::rotate() {
     if (file.is_open()) file.close();
     std::pair<std::tm, int> ti = ll::win_utils::getLocalTime();
     file.open(
@@ -32,21 +33,25 @@ bool Logger::rotate(std::string_view locateName) {
     );
     if (file.is_open()) {
         auto& i18nInstance = ll::i18n::getInstance();
-        file << i18nInstance->get("log.title.year", locateName) << ","
-             << i18nInstance->get("log.title.month", locateName) << ","
-             << i18nInstance->get("log.title.day", locateName) << "," << i18nInstance->get("log.title.hour", locateName)
-             << "," << i18nInstance->get("log.title.minute", locateName) << ","
-             << i18nInstance->get("log.title.second", locateName) << ","
-             << i18nInstance->get("log.title.millisecond", locateName) << ","
-             << i18nInstance->get("log.title.self", locateName) << ","
-             << i18nInstance->get("log.title.event", locateName) << ","
-             << i18nInstance->get("log.title.selfUUID", locateName) << ","
-             << i18nInstance->get("log.title.dim", locateName) << "," << i18nInstance->get("log.title.x", locateName)
-             << "," << i18nInstance->get("log.title.y", locateName) << ","
-             << i18nInstance->get("log.title.z", locateName) << "," << i18nInstance->get("log.title.target", locateName)
-             << "," << i18nInstance->get("log.title.tx", locateName) << ","
-             << i18nInstance->get("log.title.ty", locateName) << "," << i18nInstance->get("log.title.tz", locateName)
-             << "," << i18nInstance->get("log.title.info", locateName) << std::endl;
+        file << i18nInstance->get("log.title.year", config.locateName) << ","
+             << i18nInstance->get("log.title.month", config.locateName) << ","
+             << i18nInstance->get("log.title.day", config.locateName) << ","
+             << i18nInstance->get("log.title.hour", config.locateName) << ","
+             << i18nInstance->get("log.title.minute", config.locateName) << ","
+             << i18nInstance->get("log.title.second", config.locateName) << ","
+             << i18nInstance->get("log.title.millisecond", config.locateName) << ","
+             << i18nInstance->get("log.title.self", config.locateName) << ","
+             << i18nInstance->get("log.title.event", config.locateName) << ","
+             << i18nInstance->get("log.title.selfUUID", config.locateName) << ","
+             << i18nInstance->get("log.title.dim", config.locateName) << ","
+             << i18nInstance->get("log.title.x", config.locateName) << ","
+             << i18nInstance->get("log.title.y", config.locateName) << ","
+             << i18nInstance->get("log.title.z", config.locateName) << ","
+             << i18nInstance->get("log.title.target", config.locateName) << ","
+             << i18nInstance->get("log.title.tx", config.locateName) << ","
+             << i18nInstance->get("log.title.ty", config.locateName) << ","
+             << i18nInstance->get("log.title.tz", config.locateName) << ","
+             << i18nInstance->get("log.title.info", config.locateName) << std::endl;
         currentLine = 0;
         return true;
     } else {
@@ -65,7 +70,6 @@ void Logger::setFilePath(std::filesystem::path fp) {
 void Logger::setMaxLine(unsigned long long int ml) { maxLine = ml; }
 
 void Logger::log(
-    std::string_view          locateName,      // config
     std::vector<std::string>& noOutputContent, // noOutputContent
     std::pair<std::tm, int>   ti,              // time
     std::string               self,            // self
@@ -81,14 +85,14 @@ void Logger::log(
     std::string               tz,              // tz
     std::string               info             // info
 ) {
-    if (currentLine >= maxLine) rotate(locateName);
+    if (currentLine >= maxLine) rotate();
     std::string content = std::to_string(ti.first.tm_year + 1900) + "," + std::to_string(ti.first.tm_mon + 1) + ","
                         + std::to_string(ti.first.tm_mday) + "," + std::to_string(ti.first.tm_hour) + ","
                         + std::to_string(ti.first.tm_min) + "," + std::to_string(ti.first.tm_sec) + ","
                         + std::to_string(ti.second) + "," + self + ","
-                        + std::string{ll::i18n::getInstance()->get("event." + event, locateName)} + "," + selfUUID + ","
-                        + std::string{ll::i18n::getInstance()->get("dim." + dim, locateName)} + "," + x + "," + y + ","
-                        + z + "," + target + "," + tx + "," + ty + "," + tz + "," + info;
+                        + std::string{ll::i18n::getInstance()->get("event." + event, config.locateName)} + ","
+                        + selfUUID + "," + std::string{ll::i18n::getInstance()->get("dim." + dim, config.locateName)}
+                        + "," + x + "," + y + "," + z + "," + target + "," + tx + "," + ty + "," + tz + "," + info;
     bool output = true;
     for (auto iter = noOutputContent.begin(); iter != noOutputContent.end(); ++iter) {
         if (auto pos = content.find(*iter); pos != std::string::npos) {

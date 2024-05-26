@@ -45,7 +45,7 @@ bool LeviLogger::load() {
     logger.info("Loading fileLogger");
     fileLogger.setFilePath(getSelf().getDataDir() / "log");
     fileLogger.setMaxLine(config.maxLine);
-    if (!fileLogger.rotate(config.locateName)) {
+    if (!fileLogger.rotate()) {
         logger.error(ll::i18n::getInstance()->get("plugin.cannotOpenLogFile", config.locateName));
         return false;
     }
@@ -55,14 +55,17 @@ bool LeviLogger::load() {
 }
 
 bool LeviLogger::enable() {
-    levi_logger::listener::addListener(config, fileLogger);
-    levi_logger::command::regCmd(config.locateName, fileLogger);
+    levi_logger::listener::addEventListener();
+    levi_logger::listener::addEventHookListener();
+
+    levi_logger::command::regCmd();
 
     return true;
 }
 
 bool LeviLogger::disable() {
-    levi_logger::listener::removeListener();
+    levi_logger::listener::removeEventListener();
+    levi_logger::listener::removeEventHookListener();
 
     return true;
 }
