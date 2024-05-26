@@ -3,6 +3,9 @@
         "cannotOpenLogFile": "无法打开Log文件",
         "welcome": "欢迎使用LeviLogger"
     },
+    "command": {
+        "rotated": "日志已转储"
+    },
     "log": {
         "title": {
             "year": "年",
@@ -32,7 +35,14 @@
             "source": "源",
             "face": "面",
             "item": "物品",
-            "clickPos": "被点击的浮点位置"
+            "clickPos": "被点击的浮点位置",
+            "command": "命令",
+            "explode": {
+                "radius": "爆炸半径",
+                "maxResistance": "爆炸可破坏的方块爆炸抗性上限",
+                "isDestroy": "爆炸是否破坏方块",
+                "isFire": "爆炸是否产生火焰"
+            }
         }
     },
     "dim": {
@@ -47,6 +57,14 @@
         "3": "南",
         "4": "西",
         "5": "东"
+    },
+    "bool": {
+        "0": "否",
+        "1": "是"
+    },
+    "commandOriginType": {
+        "minecart": "命令方块矿车",
+        "block": "命令方块"
     },
     "event": {
         "PlayerAddExperienceEvent": "玩家获得经验",
@@ -70,6 +88,13 @@
         "PlayerSprintedEvent": "玩家退出疾跑状态",
         "PlayerSwingEvent": "玩家挥手(Swing)",
         "PlayerUseItemEvent": "玩家使用物品",
-        "PlayerUseItemOnEvent": "玩家对方块使用物品"
+        "PlayerUseItemOnEvent": "玩家对方块使用物品",
+        "UseFrameBlockEvent": "操作物品展示框",
+        "EntityExplodeEvent": "发生由实体引起的爆炸",
+        "BlockExplodeEvent": "发生由方块引起的爆炸",
+        "RespawnAnchorExplodeEvent": "发生由重生锚引起的爆炸",
+        "BlockExplodedEvent": "方块被爆炸破坏",
+        "CommandBlockExecuteEvent": "命令方块执行命令",
+        "ProjectileHitBlockEvent": "方块被弹射物击中"
     }
 }
