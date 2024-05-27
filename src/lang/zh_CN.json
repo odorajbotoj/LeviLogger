@@ -23,7 +23,6 @@
             "event": "事件",
             "selfUUID": "主体UUID",
             "target": "目标",
-            "targetUUID": "目标UUID",
             "tx": "目标X",
             "ty": "目标Y",
             "tz": "目标Z",
