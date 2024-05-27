@@ -34,6 +34,26 @@ Use lip:
 + PlayerSwingEvent
 + PlayerUseItemEvent
 + PlayerUseItemOnEvent
++ useFrameBlockEvent
++ entityExplodeEvent
++ blockExplodeEvent
++ respawnAnchorExplodeEvent  
++ blockExplodedEvent
++ commandBlockExecuteEvent
++ projectileHitBlockEvent
++ mobDieEvent
++ actorHurtEvent
++ projectileHitEntityEvent
++ witherDestroyEvent
++ pistonPushEvent
++ farmDecayEvent
++ playerDropItemEvent
++ playerConsumeTotemEvent
++ playerChangeSlotEvent
++ playerSetArmorEvent
++ playerUseRespawnAnchorEvent
++ playerPullFishingHookEvent
++ playerSleepEvent
 
 在控制台使用 `levilogger rotate` 来保存正在写入的日志。
 
@@ -42,7 +62,7 @@ Use lip:
 ## Config
 
 + `version` = 1，配置文件版本
-+ `locateName` i18n语言，目前只支持 `zh_CN`
++ `locateName` i18n语言，支持 `zh_CN` 与 `en_US`
 + `maxLine` 单个日志文件最大行数
 + `xxxEvent`
   + `log` 是否输出
