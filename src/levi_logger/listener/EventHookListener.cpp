@@ -125,10 +125,7 @@ LL_TYPE_INSTANCE_HOOK(
     if (config.useFrameBlockEvent.log) {
         std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
         const auto              pbd   = getPlayerBaseData(player);
-        const auto&             block = player.getLevel()
-                                .getOrCreateDimension(player.getDimensionId())
-                                ->getBlockSourceFromMainChunkSource()
-                                .getBlock(pos);
+        const auto&             block = player.getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
         fileLogger.log(
             config.useFrameBlockEvent.noOutputContent,
             ti,
@@ -162,10 +159,7 @@ LL_TYPE_INSTANCE_HOOK(
     if (config.useFrameBlockEvent.log) {
         std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
         const auto              pbd   = getPlayerBaseData(*player);
-        const auto&             block = player->getLevel()
-                                .getOrCreateDimension(player->getDimensionId())
-                                ->getBlockSourceFromMainChunkSource()
-                                .getBlock(pos);
+        const auto&             block = player->getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
         fileLogger.log(
             config.useFrameBlockEvent.noOutputContent,
             ti,

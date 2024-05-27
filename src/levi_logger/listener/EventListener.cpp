@@ -196,14 +196,10 @@ void addEventListener() {
     if (config.playerDestroyBlockEvent.log) {
         ::playerDestroyBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerDestroyBlockEvent>([](ll::event::PlayerDestroyBlockEvent& event) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pbd   = getPlayerBaseData(event.self());
-                const auto              bpos  = event.pos();
-                const auto&             block = event.self()
-                                        .getLevel()
-                                        .getOrCreateDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(bpos);
+                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                const auto              pbd  = getPlayerBaseData(event.self());
+                const auto              bpos = event.pos();
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 fileLogger.log(
                     config.playerDestroyBlockEvent.noOutputContent,
                     ti,
@@ -262,14 +258,10 @@ void addEventListener() {
         ::playerInteractBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerInteractBlockEvent>([](ll::event::PlayerInteractBlockEvent& event
                                                                           ) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pbd   = getPlayerBaseData(event.self());
-                const auto              bpos  = event.pos();
-                const auto&             block = event.self()
-                                        .getLevel()
-                                        .getOrCreateDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(bpos);
+                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                const auto              pbd  = getPlayerBaseData(event.self());
+                const auto              bpos = event.pos();
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 fileLogger.log(
                     config.playerInteractBlockEvent.noOutputContent,
                     ti,
@@ -405,11 +397,7 @@ void addEventListener() {
                     ++pos.x;
                     break;
                 }
-                const auto& block = event.self()
-                                        .getLevel()
-                                        .getOrCreateDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(pos);
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
                 fileLogger.log(
                     config.playerPlacingBlockEvent.noOutputContent,
                     ti,
@@ -436,14 +424,10 @@ void addEventListener() {
     if (config.playerPlacedBlockEvent.log) {
         ::playerPlacedBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerPlacedBlockEvent>([](ll::event::PlayerPlacedBlockEvent& event) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pbd   = getPlayerBaseData(event.self());
-                const auto              bpos  = event.pos();
-                const auto&             block = event.self()
-                                        .getLevel()
-                                        .getOrCreateDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(bpos);
+                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                const auto              pbd  = getPlayerBaseData(event.self());
+                const auto              bpos = event.pos();
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 fileLogger.log(
                     config.playerPlacedBlockEvent.noOutputContent,
                     ti,
@@ -610,16 +594,12 @@ void addEventListener() {
     if (config.playerUseItemOnEvent.log) {
         ::playerUseItemOnEventListener =
             eventBus.emplaceListener<ll::event::PlayerUseItemOnEvent>([](ll::event::PlayerUseItemOnEvent& event) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
-                const auto              pbd   = getPlayerBaseData(event.self());
-                const auto              bpos  = event.blockPos();
-                const auto&             block = event.self()
-                                        .getLevel()
-                                        .getOrCreateDimension(event.self().getDimensionId())
-                                        ->getBlockSourceFromMainChunkSource()
-                                        .getBlock(bpos);
-                const auto fpos = event.clickPos();
-                const auto it   = event.item();
+                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                const auto              pbd  = getPlayerBaseData(event.self());
+                const auto              bpos = event.blockPos();
+                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
+                const auto  fpos  = event.clickPos();
+                const auto  it    = event.item();
                 fileLogger.log(
                     config.playerUseItemOnEvent.noOutputContent,
                     ti,
