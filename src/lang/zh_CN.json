@@ -44,7 +44,17 @@
                 "isFire": "爆炸是否产生火焰"
             },
             "damage": "伤害数值",
-            "damageCause": "死亡原因"
+            "damageCause": "死亡原因",
+            "from": "从",
+            "to": "到",
+            "count": "个数",
+            "aux": "附加值",
+            "slot": "物品栏位置",
+            "put": "放入物品",
+            "take": "取出物品",
+            "increase": "增加物品",
+            "reduce": "减少物品",
+            "replace": "替换物品"
         }
     },
     "dim": {
@@ -99,6 +109,17 @@
         "CommandBlockExecuteEvent": "命令方块执行命令",
         "ProjectileHitBlockEvent": "方块被弹射物击中",
         "MobDieEvent": "生物死亡",
-        "ActorHurtEvent": "生物受伤"
+        "ActorHurtEvent": "生物受伤",
+        "ProjectileHitEntity": "实体被弹射物击中",
+        "WitherDestroyEvent": "凋零破坏方块",
+        "PistonPushEvent": "活塞推动",
+        "FarmDecayEvent": "耕地退化",
+        "PlayerDropItemEvent": "玩家丢出物品",
+        "PlayerConsumeTotemEvent": "玩家消耗图腾",
+        "PlayerChangeSlotEvent": "玩家物品栏变化",
+        "PlayerSetArmorEvent": "玩家改变盔甲栏",
+        "PlayerUseRespawnAnchorEvent": "玩家使用重生锚",
+        "PlayerPullFishingHookEvent": "玩家使用钓鱼竿钓起实体",
+        "PlayerSleepEvent": "玩家上床"
     }
 }

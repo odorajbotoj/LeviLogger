@@ -196,10 +196,14 @@ void addEventListener() {
     if (config.playerDestroyBlockEvent.log) {
         ::playerDestroyBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerDestroyBlockEvent>([](ll::event::PlayerDestroyBlockEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pbd  = getPlayerBaseData(event.self());
-                const auto              bpos = event.pos();
-                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
+                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+                const auto              pbd   = getPlayerBaseData(event.self());
+                const auto              bpos  = event.pos();
+                const auto&             block = event.self()
+                                        .getLevel()
+                                        .getOrCreateDimension(event.self().getDimensionId())
+                                        ->getBlockSourceFromMainChunkSource()
+                                        .getBlock(bpos);
                 fileLogger.log(
                     config.playerDestroyBlockEvent.noOutputContent,
                     ti,
@@ -258,10 +262,14 @@ void addEventListener() {
         ::playerInteractBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerInteractBlockEvent>([](ll::event::PlayerInteractBlockEvent& event
                                                                           ) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pbd  = getPlayerBaseData(event.self());
-                const auto              bpos = event.pos();
-                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
+                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+                const auto              pbd   = getPlayerBaseData(event.self());
+                const auto              bpos  = event.pos();
+                const auto&             block = event.self()
+                                        .getLevel()
+                                        .getOrCreateDimension(event.self().getDimensionId())
+                                        ->getBlockSourceFromMainChunkSource()
+                                        .getBlock(bpos);
                 fileLogger.log(
                     config.playerInteractBlockEvent.noOutputContent,
                     ti,
@@ -355,10 +363,17 @@ void addEventListener() {
                     pbd.x,
                     pbd.y,
                     pbd.z,
-                    it.getCustomName().empty() ? it.getName() : it.getCustomName() + "(" + it.getTypeName() + ")",
+                    (it.getCustomName().empty() ? it.getName() : it.getCustomName()) + "(" + it.getTypeName() + ")",
                     std::to_string(itafp.x),
                     std::to_string(itafp.y),
-                    std::to_string(itafp.z)
+                    std::to_string(itafp.z),
+                    std::format(
+                        "{}: {}; {}: {}",
+                        ll::i18n::getInstance()->get("log.info.count", config.locateName),
+                        it.mCount,
+                        ll::i18n::getInstance()->get("log.info.aux", config.locateName),
+                        it.getAuxValue()
+                    )
                 );
             });
     }
@@ -390,7 +405,11 @@ void addEventListener() {
                     ++pos.x;
                     break;
                 }
-                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
+                const auto& block = event.self()
+                                        .getLevel()
+                                        .getOrCreateDimension(event.self().getDimensionId())
+                                        ->getBlockSourceFromMainChunkSource()
+                                        .getBlock(pos);
                 fileLogger.log(
                     config.playerPlacingBlockEvent.noOutputContent,
                     ti,
@@ -417,10 +436,14 @@ void addEventListener() {
     if (config.playerPlacedBlockEvent.log) {
         ::playerPlacedBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerPlacedBlockEvent>([](ll::event::PlayerPlacedBlockEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pbd  = getPlayerBaseData(event.self());
-                const auto              bpos = event.pos();
-                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
+                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+                const auto              pbd   = getPlayerBaseData(event.self());
+                const auto              bpos  = event.pos();
+                const auto&             block = event.self()
+                                        .getLevel()
+                                        .getOrCreateDimension(event.self().getDimensionId())
+                                        ->getBlockSourceFromMainChunkSource()
+                                        .getBlock(bpos);
                 fileLogger.log(
                     config.playerPlacedBlockEvent.noOutputContent,
                     ti,
@@ -569,7 +592,17 @@ void addEventListener() {
                     pbd.x,
                     pbd.y,
                     pbd.z,
-                    it.getCustomName().empty() ? it.getName() : it.getCustomName() + "(" + it.getTypeName() + ")"
+                    (it.getCustomName().empty() ? it.getName() : it.getCustomName()) + "(" + it.getTypeName() + ")",
+                    "",
+                    "",
+                    "",
+                    std::format(
+                        "{}: {}; {}: {}",
+                        ll::i18n::getInstance()->get("log.info.count", config.locateName),
+                        it.mCount,
+                        ll::i18n::getInstance()->get("log.info.aux", config.locateName),
+                        it.getAuxValue()
+                    )
                 );
             });
     }
@@ -577,12 +610,16 @@ void addEventListener() {
     if (config.playerUseItemOnEvent.log) {
         ::playerUseItemOnEventListener =
             eventBus.emplaceListener<ll::event::PlayerUseItemOnEvent>([](ll::event::PlayerUseItemOnEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pbd  = getPlayerBaseData(event.self());
-                const auto              bpos = event.blockPos();
-                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
-                const auto  fpos  = event.clickPos();
-                const auto  it    = event.item();
+                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+                const auto              pbd   = getPlayerBaseData(event.self());
+                const auto              bpos  = event.blockPos();
+                const auto&             block = event.self()
+                                        .getLevel()
+                                        .getOrCreateDimension(event.self().getDimensionId())
+                                        ->getBlockSourceFromMainChunkSource()
+                                        .getBlock(bpos);
+                const auto fpos = event.clickPos();
+                const auto it   = event.item();
                 fileLogger.log(
                     config.playerUseItemOnEvent.noOutputContent,
                     ti,
@@ -598,10 +635,14 @@ void addEventListener() {
                     std::to_string(bpos.y),
                     std::to_string(bpos.z),
                     std::format(
-                        "{}: {}({}); {}: {}; {}: {} {} {}",
+                        "{}: {}({}); {}: {}; {}: {}; {}: {}; {}: {} {} {}",
                         ll::i18n::getInstance()->get("log.info.item", config.locateName),
                         it.getCustomName().empty() ? it.getName() : it.getCustomName(),
                         it.getTypeName(),
+                        ll::i18n::getInstance()->get("log.info.count", config.locateName),
+                        it.mCount,
+                        ll::i18n::getInstance()->get("log.info.aux", config.locateName),
+                        it.getAuxValue(),
                         ll::i18n::getInstance()->get("log.info.face", config.locateName),
                         ll::i18n::getInstance()->get("side." + std::to_string((schar)event.face()), config.locateName),
                         ll::i18n::getInstance()->get("log.info.clickPos", config.locateName),
