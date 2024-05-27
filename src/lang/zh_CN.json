@@ -42,7 +42,9 @@
                 "maxResistance": "爆炸可破坏的方块爆炸抗性上限",
                 "isDestroy": "爆炸是否破坏方块",
                 "isFire": "爆炸是否产生火焰"
-            }
+            },
+            "damage": "伤害数值",
+            "damageCause": "死亡原因"
         }
     },
     "dim": {
@@ -95,6 +97,8 @@
         "RespawnAnchorExplodeEvent": "发生由重生锚引起的爆炸",
         "BlockExplodedEvent": "方块被爆炸破坏",
         "CommandBlockExecuteEvent": "命令方块执行命令",
-        "ProjectileHitBlockEvent": "方块被弹射物击中"
+        "ProjectileHitBlockEvent": "方块被弹射物击中",
+        "MobDieEvent": "生物死亡",
+        "ActorHurtEvent": "生物受伤"
     }
 }

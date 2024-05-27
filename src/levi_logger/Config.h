@@ -43,4 +43,6 @@ struct Config {
     ::EventStruct          blockExplodedEvent        = {};
     ::EventStruct          commandBlockExecuteEvent  = {};
     ::EventStruct          projectileHitBlockEvent   = {false};
+    ::EventStruct          mobDieEvent               = {false};
+    ::EventStruct          actorHurtEvent            = {false};
 };

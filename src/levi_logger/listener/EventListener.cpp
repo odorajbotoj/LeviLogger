@@ -9,6 +9,8 @@
 #include "ll/api/event/EventBus.h"
 #include "ll/api/event/ListenerBase.h"
 
+#include "ll/api/event/entity/ActorHurtEvent.h"
+#include "ll/api/event/entity/MobDieEvent.h"
 #include "ll/api/event/player/PlayerAddExperienceEvent.h"
 #include "ll/api/event/player/PlayerAttackEvent.h"
 #include "ll/api/event/player/PlayerChangePermEvent.h"
@@ -29,7 +31,7 @@
 #include "ll/api/event/player/PlayerUseItemEvent.h"
 #include "ll/api/event/player/PlayerUseItemOnEvent.h"
 
-#include "mc/server/commands/CommandPermissionLevel.h"
+#include "magic_enum.hpp"
 #include "mc/world/actor/Actor.h"
 #include "mc/world/level/BlockSource.h"
 #include "mc/world/level/Level.h"
@@ -62,6 +64,8 @@ ll::event::ListenerPtr playerSprintedEventListener;
 ll::event::ListenerPtr playerSwingEventListener;
 ll::event::ListenerPtr playerUseItemEventListener;
 ll::event::ListenerPtr playerUseItemOnEventListener;
+ll::event::ListenerPtr mobDieEventListener;
+ll::event::ListenerPtr actorHurtEventListener;
 } // namespace
 
 namespace levi_logger::listener {
@@ -119,27 +123,6 @@ void addEventListener() {
             eventBus.emplaceListener<ll::event::PlayerChangePermEvent>([](ll::event::PlayerChangePermEvent& event) {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
-                int                     np  = 0;
-                switch (event.newPerm()) {
-                case CommandPermissionLevel::Any:
-                    np = 0;
-                    break;
-                case CommandPermissionLevel::GameDirectors:
-                    np = 1;
-                    break;
-                case CommandPermissionLevel::Admin:
-                    np = 2;
-                    break;
-                case CommandPermissionLevel::Host:
-                    np = 3;
-                    break;
-                case CommandPermissionLevel::Owner:
-                    np = 4;
-                    break;
-                case CommandPermissionLevel::Internal:
-                    np = 5;
-                    break;
-                }
                 fileLogger.log(
                     config.playerChangePermEvent.noOutputContent,
                     ti,
@@ -154,7 +137,11 @@ void addEventListener() {
                     "",
                     "",
                     "",
-                    std::format("{}: {}", ll::i18n::getInstance()->get("log.info.newPerm", config.locateName), np)
+                    std::format(
+                        "{}: {}",
+                        ll::i18n::getInstance()->get("log.info.newPerm", config.locateName),
+                        magic_enum::enum_name(event.newPerm())
+                    )
                 );
             });
     }
@@ -234,9 +221,14 @@ void addEventListener() {
     if (config.playerDieEvent.log) {
         ::playerDieEventListener =
             eventBus.emplaceListener<ll::event::PlayerDieEvent>([](ll::event::PlayerDieEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
-                const auto              pbd = getPlayerBaseData(event.self());
-                const auto actor = event.self().getDimension().fetchEntity(event.source().getEntityUniqueID(), false);
+                std::pair<std::tm, int> ti     = ll::win_utils::getLocalTime();
+                const auto              pbd    = getPlayerBaseData(event.self());
+                Actor*                  source = nullptr;
+                if (event.source().isEntitySource()) {
+                    source = event.self().getLevel().fetchEntity(event.source().getDamagingEntityUniqueID());
+                    if (source)
+                        if (event.source().isChildEntitySource()) source = source->getOwner();
+                }
                 fileLogger.log(
                     config.playerDieEvent.noOutputContent,
                     ti,
@@ -251,13 +243,13 @@ void addEventListener() {
                     "",
                     "",
                     "",
-                    actor ? std::format(
+                    source ? std::format(
                         "{}: {}({})",
                         ll::i18n::getInstance()->get("log.info.source", config.locateName),
-                        actor->getNameTag(),
-                        actor->getTypeName()
+                        source->getNameTag(),
+                        source->getTypeName()
                     )
-                          : ""
+                           : ""
                 );
             });
     }
@@ -620,6 +612,91 @@ void addEventListener() {
                 );
             });
     }
+
+    if (config.mobDieEvent.log) {
+        ::mobDieEventListener = eventBus.emplaceListener<ll::event::MobDieEvent>([](ll::event::MobDieEvent& event) {
+            std::pair<std::tm, int> ti     = ll::win_utils::getLocalTime();
+            const auto&             mob    = event.self();
+            const auto              pos    = mob.getFeetPos();
+            Actor*                  source = nullptr;
+            if (event.source().isEntitySource()) {
+                source = event.self().getLevel().fetchEntity(event.source().getDamagingEntityUniqueID());
+                if (source)
+                    if (event.source().isChildEntitySource()) source = source->getOwner();
+            }
+            fileLogger.log(
+                config.mobDieEvent.noOutputContent,
+                ti,
+                mob.getNameTag() + "(" + mob.getTypeName() + ")",
+                "MobDieEvent",
+                "",
+                std::to_string(mob.getDimensionId()),
+                std::to_string(pos.x),
+                std::to_string(pos.y),
+                std::to_string(pos.z),
+                "",
+                "",
+                "",
+                "",
+                (source ? std::format(
+                     "{}: {}({}); ",
+                     ll::i18n::getInstance()->get("log.info.source", config.locateName),
+                     source->getNameTag(),
+                     source->getTypeName()
+                 )
+                        : "")
+                    + std::format(
+                        "{}: {}",
+                        ll::i18n::getInstance()->get("log.info.damageCause", config.locateName),
+                        magic_enum::enum_name(event.source().getCause())
+                    )
+            );
+        });
+    }
+
+    if (config.actorHurtEvent.log) {
+        ::actorHurtEventListener =
+            eventBus.emplaceListener<ll::event::ActorHurtEvent>([](ll::event::ActorHurtEvent& event) {
+                std::pair<std::tm, int> ti     = ll::win_utils::getLocalTime();
+                const auto&             actor  = event.self();
+                const auto              pos    = actor.getFeetPos();
+                Actor*                  source = nullptr;
+                if (event.source().isEntitySource()) {
+                    source = event.self().getLevel().fetchEntity(event.source().getDamagingEntityUniqueID());
+                    if (source)
+                        if (event.source().isChildEntitySource()) source = source->getOwner();
+                }
+                fileLogger.log(
+                    config.actorHurtEvent.noOutputContent,
+                    ti,
+                    actor.getNameTag() + "(" + actor.getTypeName() + ")",
+                    "ActorHurtEvent",
+                    "",
+                    std::to_string(actor.getDimensionId()),
+                    std::to_string(pos.x),
+                    std::to_string(pos.y),
+                    std::to_string(pos.z),
+                    "",
+                    "",
+                    "",
+                    "",
+                    (source ? std::format(
+                         "{}: {}({}); ",
+                         ll::i18n::getInstance()->get("log.info.source", config.locateName),
+                         source->getNameTag(),
+                         source->getTypeName()
+                     )
+                            : "")
+                        + std::format(
+                            "{}: {}; {}: {}",
+                            ll::i18n::getInstance()->get("log.info.damage", config.locateName),
+                            event.damage(),
+                            ll::i18n::getInstance()->get("log.info.damageCause", config.locateName),
+                            magic_enum::enum_name(event.source().getCause())
+                        )
+                );
+            });
+    }
 }
 
 void removeEventListener() {
@@ -646,5 +723,7 @@ void removeEventListener() {
     eventBus.removeListener(::playerSwingEventListener);
     eventBus.removeListener(::playerUseItemEventListener);
     eventBus.removeListener(::playerUseItemOnEventListener);
+    eventBus.removeListener(::mobDieEventListener);
+    eventBus.removeListener(::actorHurtEventListener);
 }
 } // namespace levi_logger::listener
