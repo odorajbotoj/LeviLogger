@@ -3,6 +3,9 @@
         "cannotOpenLogFile": "无法打开Log文件",
         "welcome": "欢迎使用LeviLogger"
     },
+    "command": {
+        "rotated": "日志已转储"
+    },
     "log": {
         "title": {
             "year": "年",
@@ -20,7 +23,6 @@
             "event": "事件",
             "selfUUID": "主体UUID",
             "target": "目标",
-            "targetUUID": "目标UUID",
             "tx": "目标X",
             "ty": "目标Y",
             "tz": "目标Z",
@@ -32,7 +34,26 @@
             "source": "源",
             "face": "面",
             "item": "物品",
-            "clickPos": "被点击的浮点位置"
+            "clickPos": "被点击的浮点位置",
+            "command": "命令",
+            "explode": {
+                "radius": "爆炸半径",
+                "maxResistance": "爆炸可破坏的方块爆炸抗性上限",
+                "isDestroy": "爆炸是否破坏方块",
+                "isFire": "爆炸是否产生火焰"
+            },
+            "damage": "伤害数值",
+            "damageCause": "死亡原因",
+            "from": "从",
+            "to": "到",
+            "count": "个数",
+            "aux": "附加值",
+            "slot": "物品栏位置",
+            "put": "放入物品",
+            "take": "取出物品",
+            "increase": "增加物品",
+            "reduce": "减少物品",
+            "replace": "替换物品"
         }
     },
     "dim": {
@@ -47,6 +68,14 @@
         "3": "南",
         "4": "西",
         "5": "东"
+    },
+    "bool": {
+        "0": "否",
+        "1": "是"
+    },
+    "commandOriginType": {
+        "minecart": "命令方块矿车",
+        "block": "命令方块"
     },
     "event": {
         "PlayerAddExperienceEvent": "玩家获得经验",
@@ -70,6 +99,26 @@
         "PlayerSprintedEvent": "玩家退出疾跑状态",
         "PlayerSwingEvent": "玩家挥手(Swing)",
         "PlayerUseItemEvent": "玩家使用物品",
-        "PlayerUseItemOnEvent": "玩家对方块使用物品"
+        "PlayerUseItemOnEvent": "玩家对方块使用物品",
+        "UseFrameBlockEvent": "操作物品展示框",
+        "EntityExplodeEvent": "发生由实体引起的爆炸",
+        "BlockExplodeEvent": "发生由方块引起的爆炸",
+        "RespawnAnchorExplodeEvent": "发生由重生锚引起的爆炸",
+        "BlockExplodedEvent": "方块被爆炸破坏",
+        "CommandBlockExecuteEvent": "命令方块执行命令",
+        "ProjectileHitBlockEvent": "方块被弹射物击中",
+        "MobDieEvent": "生物死亡",
+        "ActorHurtEvent": "生物受伤",
+        "ProjectileHitEntity": "实体被弹射物击中",
+        "WitherDestroyEvent": "凋零破坏方块",
+        "PistonPushEvent": "活塞推动",
+        "FarmDecayEvent": "耕地退化",
+        "PlayerDropItemEvent": "玩家丢出物品",
+        "PlayerConsumeTotemEvent": "玩家消耗图腾",
+        "PlayerChangeSlotEvent": "玩家物品栏变化",
+        "PlayerSetArmorEvent": "玩家改变盔甲栏",
+        "PlayerUseRespawnAnchorEvent": "玩家使用重生锚",
+        "PlayerPullFishingHookEvent": "玩家使用钓鱼竿钓起实体",
+        "PlayerSleepEvent": "玩家上床"
     }
 }
