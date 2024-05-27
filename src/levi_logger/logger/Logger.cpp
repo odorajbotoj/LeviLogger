@@ -7,10 +7,26 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <string_view>
 #include <vector>
 
+/*
+CSV: RFC 4180
+*/
+
+namespace {
+std::string subreplace(std::string resource_str, std::string sub_str, std::string new_str) {
+    std::string            dst_str = resource_str;
+    std::string::size_type pos     = 0;
+    while ((pos = dst_str.find(sub_str)) != std::string::npos) // 替换所有指定子串
+    {
+        dst_str.replace(pos, sub_str.length(), new_str);
+    }
+    return dst_str;
+}
+} // namespace
 
 namespace levi_logger::logger {
 
@@ -86,13 +102,14 @@ void Logger::log(
     std::string               info             // info
 ) {
     if (currentLine >= maxLine) rotate();
-    std::string content = std::to_string(ti.first.tm_year + 1900) + "," + std::to_string(ti.first.tm_mon + 1) + ","
-                        + std::to_string(ti.first.tm_mday) + "," + std::to_string(ti.first.tm_hour) + ","
-                        + std::to_string(ti.first.tm_min) + "," + std::to_string(ti.first.tm_sec) + ","
-                        + std::to_string(ti.second) + "," + self + ","
-                        + std::string{ll::i18n::getInstance()->get("event." + event, config.locateName)} + ","
-                        + selfUUID + "," + std::string{ll::i18n::getInstance()->get("dim." + dim, config.locateName)}
-                        + "," + x + "," + y + "," + z + "," + target + "," + tx + "," + ty + "," + tz + "," + info;
+    info = ::subreplace(info, "\"", "\"\"");
+    std::string content =
+        std::to_string(ti.first.tm_year + 1900) + "," + std::to_string(ti.first.tm_mon + 1) + ","
+        + std::to_string(ti.first.tm_mday) + "," + std::to_string(ti.first.tm_hour) + ","
+        + std::to_string(ti.first.tm_min) + "," + std::to_string(ti.first.tm_sec) + "," + std::to_string(ti.second)
+        + "," + self + "," + std::string{ll::i18n::getInstance()->get("event." + event, config.locateName)} + ","
+        + selfUUID + "," + std::string{ll::i18n::getInstance()->get("dim." + dim, config.locateName)} + "," + x + ","
+        + y + "," + z + "," + target + "," + tx + "," + ty + "," + tz + ",\"" + info + "\"";
     bool output = true;
     for (auto iter = noOutputContent.begin(); iter != noOutputContent.end(); ++iter) {
         if (auto pos = content.find(*iter); pos != std::string::npos) {

@@ -1,0 +1,124 @@
+{
+    "plugin": {
+        "cannotOpenLogFile": "cannot open log file",
+        "welcome": "Welcome!"
+    },
+    "command": {
+        "rotated": "log rotated"
+    },
+    "log": {
+        "title": {
+            "year": "year",
+            "month": "month",
+            "day": "day",
+            "hour": "hour",
+            "minute": "minute",
+            "second": "second",
+            "millisecond": "millisecond",
+            "self": "self",
+            "dim": "dimension",
+            "x": "X",
+            "y": "Y",
+            "z": "Z",
+            "event": "event",
+            "selfUUID": "self UUID",
+            "target": "target",
+            "tx": "target X",
+            "ty": "target Y",
+            "tz": "target Z",
+            "info": "info"
+        },
+        "info": {
+            "newPerm": "newPerm",
+            "message": "message",
+            "source": "source",
+            "face": "face",
+            "item": "item",
+            "clickPos": "clickPos",
+            "command": "command",
+            "explode": {
+                "radius": "radius",
+                "maxResistance": "maxResistance",
+                "isDestroy": "isDestroy",
+                "isFire": "isFire"
+            },
+            "damage": "damage",
+            "damageCause": "damageCause",
+            "from": "from",
+            "to": "to",
+            "count": "count",
+            "aux": "aux",
+            "slot": "slot",
+            "put": "put",
+            "take": "take",
+            "increase": "increase",
+            "reduce": "reduce",
+            "replace": "replace"
+        }
+    },
+    "dim": {
+        "0": "Overworld",
+        "1": "The Nether",
+        "2": "The End"
+    },
+    "side": {
+        "0": "Down",
+        "1": "Up",
+        "2": "North",
+        "3": "South",
+        "4": "West",
+        "5": "East"
+    },
+    "bool": {
+        "0": "False",
+        "1": "True"
+    },
+    "commandOriginType": {
+        "minecart": "Command Block Minecart",
+        "block": "Command Block"
+    },
+    "event": {
+        "PlayerAddExperienceEvent": "PlayerAddExperienceEvent",
+        "PlayerAttackEvent": "PlayerAttackEvent",
+        "PlayerChangePermEvent": "PlayerChangePermEvent",
+        "PlayerChatEvent": "PlayerChatEvent",
+        "PlayerConnectEvent": "PlayerConnectEvent",
+        "PlayerDestroyBlockEvent": "PlayerDestroyBlockEvent",
+        "PlayerDieEvent": "PlayerDieEvent",
+        "PlayerInteractBlockEvent": "PlayerInteractBlockEvent",
+        "PlayerJoinEvent": "PlayerJoinEvent",
+        "PlayerJumpEvent": "PlayerJumpEvent",
+        "PlayerLeaveEvent": "PlayerLeaveEvent",
+        "PlayerPickUpItemEvent": "PlayerPickUpItemEvent",
+        "PlayerPlacingBlockEvent": "PlayerPlacingBlockEvent",
+        "PlayerPlacedBlockEvent": "PlayerPlacedBlockEvent",
+        "PlayerRespawnEvent": "PlayerRespawnEvent",
+        "PlayerSneakingEvent": "PlayerSneakingEvent",
+        "PlayerSneakedEvent": "PlayerSneakedEvent",
+        "PlayerSprintingEvent": "PlayerSprintingEvent",
+        "PlayerSprintedEvent": "PlayerSprintedEvent",
+        "PlayerSwingEvent": "PlayerSwingEvent",
+        "PlayerUseItemEvent": "PlayerUseItemEvent",
+        "PlayerUseItemOnEvent": "PlayerUseItemOnEvent",
+        "UseFrameBlockEvent": "UseFrameBlockEvent",
+        "EntityExplodeEvent": "EntityExplodeEvent",
+        "BlockExplodeEvent": "BlockExplodeEvent",
+        "RespawnAnchorExplodeEvent": "RespawnAnchorExplodeEvent",
+        "BlockExplodedEvent": "BlockExplodedEvent",
+        "CommandBlockExecuteEvent": "CommandBlockExecuteEvent",
+        "ProjectileHitBlockEvent": "ProjectileHitBlockEvent",
+        "MobDieEvent": "MobDieEvent",
+        "ActorHurtEvent": "ActorHurtEvent",
+        "ProjectileHitEntity": "ProjectileHitEntity",
+        "WitherDestroyEvent": "WitherDestroyEvent",
+        "PistonPushEvent": "PistonPushEvent",
+        "FarmDecayEvent": "FarmDecayEvent",
+        "PlayerDropItemEvent": "PlayerDropItemEvent",
+        "PlayerConsumeTotemEvent": "PlayerConsumeTotemEvent",
+        "PlayerChangeSlotEvent": "PlayerChangeSlotEvent",
+        "PlayerSetArmorEvent": "PlayerSetArmorEvent",
+        "PlayerUseRespawnAnchorEvent": "PlayerUseRespawnAnchorEvent",
+        "PlayerPullFishingHookEvent": "PlayerPullFishingHookEvent",
+        "PlayerSleepEvent": "PlayerSleepEvent"
+    }
+}
