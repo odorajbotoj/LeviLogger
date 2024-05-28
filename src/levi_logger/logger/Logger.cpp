@@ -17,14 +17,12 @@ CSV: RFC 4180
 */
 
 namespace {
-std::string subreplace(std::string resource_str, std::string sub_str, std::string new_str) {
-    std::string            dst_str = resource_str;
-    std::string::size_type pos     = 0;
-    while ((pos = dst_str.find(sub_str)) != std::string::npos) // 替换所有指定子串
-    {
-        dst_str.replace(pos, sub_str.length(), new_str);
+std::string subreplace(std::string str, std::string sub_str, std::string new_str) {
+    for (std::string::size_type pos(0); pos != std::string::npos; pos += new_str.length()) {
+        if ((pos = str.find(sub_str, pos)) != std::string::npos) str.replace(pos, sub_str.length(), new_str);
+        else break;
     }
-    return dst_str;
+    return str;
 }
 } // namespace
 
