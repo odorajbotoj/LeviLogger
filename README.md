@@ -55,7 +55,7 @@ Use lip:
 + PlayerPullFishingHookEvent
 + PlayerSleepEvent
 + ExecutingCommandEvent
-+ PlayerChangeDimension
++ PlayerChangeDimensionEvent
 
 在控制台使用 `levilogger rotate` 来保存正在写入的日志。
 
@@ -110,7 +110,7 @@ Use lip:
 + PlayerJoinEvent - `<{{self}}> ({{x}}, {{y}}, {{z}}) {{event}}`
 + CommandBlockExecuteEvent - `<{{self}}> ({{x}}, {{y}}, {{z}}) {{info}}`
 + ExecutingCommandEvent - `<{{self}}> ({{x}}, {{y}}, {{z}}) {{info}}`
-+ PlayerChangeDimension - `<{{self}}> ({{x}}, {{y}}, {{z}}) {{event}} {{info}}`
++ PlayerChangeDimensionEvent - `<{{self}}> ({{x}}, {{y}}, {{z}}) {{event}} {{info}}`
 
 ## License
 
