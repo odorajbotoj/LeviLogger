@@ -9,6 +9,7 @@
 #include "ll/api/event/EventBus.h"
 #include "ll/api/event/ListenerBase.h"
 
+#include "ll/api/event/command/ExecuteCommandEvent.h"
 #include "ll/api/event/entity/ActorHurtEvent.h"
 #include "ll/api/event/entity/MobDieEvent.h"
 #include "ll/api/event/player/PlayerAddExperienceEvent.h"
@@ -66,6 +67,7 @@ ll::event::ListenerPtr playerUseItemEventListener;
 ll::event::ListenerPtr playerUseItemOnEventListener;
 ll::event::ListenerPtr mobDieEventListener;
 ll::event::ListenerPtr actorHurtEventListener;
+ll::event::ListenerPtr executingCommandEventListener;
 } // namespace
 
 namespace levi_logger::listener {
@@ -80,7 +82,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerAddExperienceEvent.noOutputContent,
+                    config.playerAddExperienceEvent,
                     ti,
                     pbd.self,
                     "PlayerAddExperienceEvent",
@@ -101,7 +103,7 @@ void addEventListener() {
                 auto&                   target    = event.target();
                 auto                    targetPos = target.getFeetPos();
                 fileLogger.log(
-                    config.playerAttackEvent.noOutputContent,
+                    config.playerAttackEvent,
                     ti,
                     pbd.self,
                     "PlayerAttackEvent",
@@ -124,7 +126,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerChangePermEvent.noOutputContent,
+                    config.playerChangePermEvent,
                     ti,
                     pbd.self,
                     "PlayerChangePermEvent",
@@ -152,7 +154,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerChatEvent.noOutputContent,
+                    config.playerChatEvent,
                     ti,
                     pbd.self,
                     "PlayerChatEvent",
@@ -180,7 +182,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerConnectEvent.noOutputContent,
+                    config.playerConnectEvent,
                     ti,
                     pbd.self,
                     "PlayerConnectEvent",
@@ -201,7 +203,7 @@ void addEventListener() {
                 const auto              bpos = event.pos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 fileLogger.log(
-                    config.playerDestroyBlockEvent.noOutputContent,
+                    config.playerDestroyBlockEvent,
                     ti,
                     pbd.self,
                     "PlayerDestroyBlockEvent",
@@ -230,7 +232,7 @@ void addEventListener() {
                         if (event.source().isChildEntitySource()) source = source->getOwner();
                 }
                 fileLogger.log(
-                    config.playerDieEvent.noOutputContent,
+                    config.playerDieEvent,
                     ti,
                     pbd.self,
                     "PlayerDieEvent",
@@ -263,7 +265,7 @@ void addEventListener() {
                 const auto              bpos = event.pos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 fileLogger.log(
-                    config.playerInteractBlockEvent.noOutputContent,
+                    config.playerInteractBlockEvent,
                     ti,
                     pbd.self,
                     "PlayerInteractBlockEvent",
@@ -281,41 +283,23 @@ void addEventListener() {
     }
 
     if (config.playerJoinEvent.log) {
-        ::playerJoinEventListener =
-            eventBus.emplaceListener<ll::event::PlayerJoinEvent>([](ll::event::PlayerJoinEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
-                const auto              pbd = getPlayerBaseData(event.self());
-                fileLogger.log(
-                    config.playerJoinEvent.noOutputContent,
-                    ti,
-                    pbd.self,
-                    "PlayerJoinEvent",
-                    pbd.UUID,
-                    pbd.dim,
-                    pbd.x,
-                    pbd.y,
-                    pbd.z
-                );
-            });
+        ::playerJoinEventListener = eventBus.emplaceListener<ll::event::PlayerJoinEvent>([](ll::event::PlayerJoinEvent&
+                                                                                                event) {
+            std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+            const auto              pbd = getPlayerBaseData(event.self());
+            fileLogger
+                .log(config.playerJoinEvent, ti, pbd.self, "PlayerJoinEvent", pbd.UUID, pbd.dim, pbd.x, pbd.y, pbd.z);
+        });
     }
 
     if (config.playerJumpEvent.log) {
-        ::playerJumpEventListener =
-            eventBus.emplaceListener<ll::event::PlayerJumpEvent>([](ll::event::PlayerJumpEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
-                const auto              pbd = getPlayerBaseData(event.self());
-                fileLogger.log(
-                    config.playerJumpEvent.noOutputContent,
-                    ti,
-                    pbd.self,
-                    "PlayerJumpEvent",
-                    pbd.UUID,
-                    pbd.dim,
-                    pbd.x,
-                    pbd.y,
-                    pbd.z
-                );
-            });
+        ::playerJumpEventListener = eventBus.emplaceListener<ll::event::PlayerJumpEvent>([](ll::event::PlayerJumpEvent&
+                                                                                                event) {
+            std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+            const auto              pbd = getPlayerBaseData(event.self());
+            fileLogger
+                .log(config.playerJumpEvent, ti, pbd.self, "PlayerJumpEvent", pbd.UUID, pbd.dim, pbd.x, pbd.y, pbd.z);
+        });
     }
 
     if (config.playerLeaveEvent.log) {
@@ -324,7 +308,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerLeaveEvent.noOutputContent,
+                    config.playerLeaveEvent,
                     ti,
                     pbd.self,
                     "PlayerLeaveEvent",
@@ -346,7 +330,7 @@ void addEventListener() {
                 const auto              itafp = ita.getFeetPos();
                 const auto              it    = ita.item();
                 fileLogger.log(
-                    config.playerPickUpItemEvent.noOutputContent,
+                    config.playerPickUpItemEvent,
                     ti,
                     pbd.self,
                     "PlayerPickUpItemEvent",
@@ -399,7 +383,7 @@ void addEventListener() {
                 }
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
                 fileLogger.log(
-                    config.playerPlacingBlockEvent.noOutputContent,
+                    config.playerPlacingBlockEvent,
                     ti,
                     pbd.self,
                     "PlayerPlacingBlockEvent",
@@ -429,7 +413,7 @@ void addEventListener() {
                 const auto              bpos = event.pos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 fileLogger.log(
-                    config.playerPlacedBlockEvent.noOutputContent,
+                    config.playerPlacedBlockEvent,
                     ti,
                     pbd.self,
                     "PlayerPlacedBlockEvent",
@@ -452,7 +436,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerRespawnEvent.noOutputContent,
+                    config.playerRespawnEvent,
                     ti,
                     pbd.self,
                     "PlayerRespawnEvent",
@@ -471,7 +455,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerSneakingEvent.noOutputContent,
+                    config.playerSneakingEvent,
                     ti,
                     pbd.self,
                     "PlayerSneakingEvent",
@@ -490,7 +474,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerSneakedEvent.noOutputContent,
+                    config.playerSneakedEvent,
                     ti,
                     pbd.self,
                     "PlayerSneakedEvent",
@@ -509,7 +493,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerSprintingEvent.noOutputContent,
+                    config.playerSprintingEvent,
                     ti,
                     pbd.self,
                     "PlayerSprintingEvent",
@@ -528,7 +512,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerSprintedEvent.noOutputContent,
+                    config.playerSprintedEvent,
                     ti,
                     pbd.self,
                     "PlayerSprintedEvent",
@@ -547,7 +531,7 @@ void addEventListener() {
                 std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
-                    config.playerSwingEvent.noOutputContent,
+                    config.playerSwingEvent,
                     ti,
                     pbd.self,
                     "PlayerSwingEvent",
@@ -567,7 +551,7 @@ void addEventListener() {
                 const auto              pbd = getPlayerBaseData(event.self());
                 const auto              it  = event.item();
                 fileLogger.log(
-                    config.playerUseItemEvent.noOutputContent,
+                    config.playerUseItemEvent,
                     ti,
                     pbd.self,
                     "PlayerUseItemEvent",
@@ -601,7 +585,7 @@ void addEventListener() {
                 const auto  fpos  = event.clickPos();
                 const auto  it    = event.item();
                 fileLogger.log(
-                    config.playerUseItemOnEvent.noOutputContent,
+                    config.playerUseItemOnEvent,
                     ti,
                     pbd.self,
                     "PlayerUseItemOnEvent",
@@ -646,7 +630,7 @@ void addEventListener() {
                     if (event.source().isChildEntitySource()) source = source->getOwner();
             }
             fileLogger.log(
-                config.mobDieEvent.noOutputContent,
+                config.mobDieEvent,
                 ti,
                 mob.getNameTag() + "(" + mob.getTypeName() + ")",
                 "MobDieEvent",
@@ -688,7 +672,7 @@ void addEventListener() {
                         if (event.source().isChildEntitySource()) source = source->getOwner();
                 }
                 fileLogger.log(
-                    config.actorHurtEvent.noOutputContent,
+                    config.actorHurtEvent,
                     ti,
                     actor.getNameTag() + "(" + actor.getTypeName() + ")",
                     "ActorHurtEvent",
@@ -716,6 +700,37 @@ void addEventListener() {
                             magic_enum::enum_name(event.source().getCause())
                         )
                 );
+            });
+    }
+
+    if (config.executingCommandEvent.log) {
+        ::executingCommandEventListener =
+            eventBus.emplaceListener<ll::event::ExecutingCommandEvent>([](ll::event::ExecutingCommandEvent& event) {
+                std::pair<std::tm, int> ti     = ll::win_utils::getLocalTime();
+                const Player*           player = static_cast<Player*>(event.commandContext().mOrigin->getEntity());
+                if (player) {
+                    const auto pbd = getPlayerBaseData(*player);
+                    fileLogger.log(
+                        config.executingCommandEvent,
+                        ti,
+                        pbd.self,
+                        "ExecutingCommandEvent",
+                        pbd.UUID,
+                        pbd.dim,
+                        pbd.x,
+                        pbd.y,
+                        pbd.z,
+                        "",
+                        "",
+                        "",
+                        "",
+                        std::format(
+                            "{}: {}",
+                            ll::i18n::getInstance()->get("log.info.command", config.locateName),
+                            event.commandContext().mCommand
+                        )
+                    );
+                }
             });
     }
 }
@@ -746,5 +761,6 @@ void removeEventListener() {
     eventBus.removeListener(::playerUseItemOnEventListener);
     eventBus.removeListener(::mobDieEventListener);
     eventBus.removeListener(::actorHurtEventListener);
+    eventBus.removeListener(::executingCommandEventListener);
 }
 } // namespace levi_logger::listener

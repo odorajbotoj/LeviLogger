@@ -4,7 +4,7 @@
 
 #include <string>
 
-const PlayerBaseData getPlayerBaseData(Player& player) {
+const PlayerBaseData getPlayerBaseData(const Player& player) {
     PlayerBaseData rst;
     rst.self = player.getRealName();
     rst.UUID = player.getUuid().asString();

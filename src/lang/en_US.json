@@ -119,6 +119,8 @@
         "PlayerSetArmorEvent": "PlayerSetArmorEvent",
         "PlayerUseRespawnAnchorEvent": "PlayerUseRespawnAnchorEvent",
         "PlayerPullFishingHookEvent": "PlayerPullFishingHookEvent",
-        "PlayerSleepEvent": "PlayerSleepEvent"
+        "PlayerSleepEvent": "PlayerSleepEvent",
+        "ExecutingCommandEvent": "ExecutingCommandEvent",
+        "PlayerChangeDimensionEvent": "PlayerChangeDimensionEvent"
     }
 }

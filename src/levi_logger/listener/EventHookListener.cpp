@@ -22,6 +22,7 @@
 #include "mc/world/item/ItemStackBase.h"
 #include "mc/world/item/registry/ItemStack.h"
 #include "mc/world/level/BlockSource.h"
+#include "mc/world/level/ChangeDimensionRequest.h"
 #include "mc/world/level/Level.h"
 #include "mc/world/level/block/Block.h"
 #include "mc/world/level/block/FarmBlock.h"
@@ -127,7 +128,7 @@ LL_TYPE_INSTANCE_HOOK(
         const auto              pbd   = getPlayerBaseData(player);
         const auto&             block = player.getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
         fileLogger.log(
-            config.useFrameBlockEvent.noOutputContent,
+            config.useFrameBlockEvent,
             ti,
             pbd.self,
             "UseFrameBlockEvent",
@@ -161,7 +162,7 @@ LL_TYPE_INSTANCE_HOOK(
         const auto              pbd   = getPlayerBaseData(*player);
         const auto&             block = player->getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
         fileLogger.log(
-            config.useFrameBlockEvent.noOutputContent,
+            config.useFrameBlockEvent,
             ti,
             pbd.self,
             "UseFrameBlockEvent",
@@ -197,7 +198,7 @@ LL_TYPE_INSTANCE_HOOK(
     if (config.entityExplodeEvent.log && source) {
         std::pair<std::tm, int> ti = ll::win_utils::getLocalTime();
         fileLogger.log(
-            config.entityExplodeEvent.noOutputContent,
+            config.entityExplodeEvent,
             ti,
             source->getNameTag() + "(" + source->getTypeName() + ")",
             "EntityExplodeEvent",
@@ -245,7 +246,7 @@ LL_TYPE_INSTANCE_HOOK(
         std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
         const auto&             block = region.getBlock(pos);
         fileLogger.log(
-            config.blockExplodeEvent.noOutputContent,
+            config.blockExplodeEvent,
             ti,
             block.buildDescriptionName() + "(" + block.getTypeName() + ")",
             "BlockExplodeEvent",
@@ -289,7 +290,7 @@ LL_TYPE_STATIC_HOOK(
         std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(player);
         fileLogger.log(
-            config.respawnAnchorExplodeEvent.noOutputContent,
+            config.respawnAnchorExplodeEvent,
             ti,
             pbd.self,
             "RespawnAnchorExplodeEvent",
@@ -321,7 +322,7 @@ LL_TYPE_INSTANCE_HOOK(
         std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
         const auto&             block = region.getBlock(pos);
         fileLogger.log(
-            config.blockExplodedEvent.noOutputContent,
+            config.blockExplodedEvent,
             ti,
             block.buildDescriptionName() + "(" + block.getTypeName() + ")",
             "BlockExplodedEvent",
@@ -361,7 +362,7 @@ LL_TYPE_INSTANCE_HOOK(
             std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
             const auto&             pos = commandOrigin.getEntity()->getPosition();
             fileLogger.log(
-                config.commandBlockExecuteEvent.noOutputContent,
+                config.commandBlockExecuteEvent,
                 ti,
                 std::string{ll::i18n::getInstance()->get("commandOriginType.minecart", config.locateName)},
                 "CommandBlockExecuteEvent",
@@ -384,7 +385,7 @@ LL_TYPE_INSTANCE_HOOK(
             std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
             const auto              pos = commandOrigin.getBlockPosition();
             fileLogger.log(
-                config.commandBlockExecuteEvent.noOutputContent,
+                config.commandBlockExecuteEvent,
                 ti,
                 std::string{ll::i18n::getInstance()->get("commandOriginType.block", config.locateName)},
                 "CommandBlockExecuteEvent",
@@ -424,7 +425,7 @@ LL_TYPE_INSTANCE_HOOK(
             const auto&             block          = region.getBlock(pos);
             const auto              projectile_pos = projectile.getFeetPos();
             fileLogger.log(
-                config.projectileHitBlockEvent.noOutputContent,
+                config.projectileHitBlockEvent,
                 ti,
                 projectile.getNameTag() + "(" + projectile.getTypeName() + ")",
                 "ProjectileHitBlockEvent",
@@ -459,7 +460,7 @@ LL_TYPE_INSTANCE_HOOK(
             const auto              owner_pos  = owner.getFeetPos();
             const auto              target_pos = target->getFeetPos();
             fileLogger.log(
-                config.projectileHitEntityEvent.noOutputContent,
+                config.projectileHitEntityEvent,
                 ti,
                 owner.getNameTag() + "(" + owner.getTypeName() + ")",
                 "ProjectileHitEntityEvent",
@@ -496,7 +497,7 @@ LL_TYPE_INSTANCE_HOOK(
         const auto              max_pos  = bb.max;
         const auto              boss_pos = this->getFeetPos();
         fileLogger.log(
-            config.witherDestroyEvent.noOutputContent,
+            config.witherDestroyEvent,
             ti,
             this->getNameTag() + "(" + this->getTypeName() + ")",
             "WitherDestroyEvent",
@@ -546,7 +547,7 @@ LL_TYPE_INSTANCE_HOOK(
                                     ->getBlockSourceFromMainChunkSource()
                                     .getBlock(curPos);
             fileLogger.log(
-                config.pistonPushEvent.noOutputContent,
+                config.pistonPushEvent,
                 ti,
                 "",
                 "PistonPushEvent",
@@ -579,7 +580,7 @@ LL_TYPE_INSTANCE_HOOK(
     if (config.farmDecayEvent.log) {
         std::pair<std::tm, int> ti = ll::win_utils::getLocalTime();
         fileLogger.log(
-            config.farmDecayEvent.noOutputContent,
+            config.farmDecayEvent,
             ti,
             actor ? actor->getNameTag() + "(" + actor->getTypeName() + ")" : "",
             "FarmDecayEvent",
@@ -610,7 +611,7 @@ LL_TYPE_INSTANCE_HOOK(
         std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
-            config.playerDropItemEvent.noOutputContent,
+            config.playerDropItemEvent,
             ti,
             pbd.self,
             "PlayerDropItemEvent",
@@ -652,7 +653,7 @@ LL_TYPE_INSTANCE_HOOK(
             const auto              pbd  = getPlayerBaseData(player);
             const auto&             item = player.getInventory().getItem(actions[0].mSlot);
             fileLogger.log(
-                config.playerDropItemEvent.noOutputContent,
+                config.playerDropItemEvent,
                 ti,
                 pbd.self,
                 "PlayerDropItemEvent",
@@ -683,7 +684,7 @@ LL_TYPE_INSTANCE_HOOK(PlayerConsumeTotemHook, HookPriority::Normal, Player, "?co
         std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
-            config.playerConsumeTotemEvent.noOutputContent,
+            config.playerConsumeTotemEvent,
             ti,
             pbd.self,
             "PlayerConsumeTotemEvent",
@@ -713,7 +714,7 @@ LL_TYPE_INSTANCE_HOOK(
         std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
-            config.playerChangeSlotEvent.noOutputContent,
+            config.playerChangeSlotEvent,
             ti,
             pbd.self,
             "PlayerChangeSlotEvent",
@@ -746,7 +747,7 @@ LL_TYPE_INSTANCE_HOOK(
         std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
-            config.playerSetArmorEvent.noOutputContent,
+            config.playerSetArmorEvent,
             ti,
             pbd.self,
             "PlayerSetArmorEvent",
@@ -788,7 +789,7 @@ LL_TYPE_STATIC_HOOK(
         std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(player);
         fileLogger.log(
-            config.playerUseRespawnAnchorEvent.noOutputContent,
+            config.playerUseRespawnAnchorEvent,
             ti,
             pbd.self,
             "PlayerUseRespawnAnchorEvent",
@@ -822,7 +823,7 @@ LL_TYPE_INSTANCE_HOOK(
         ItemStack               item;
         if (inEntity.isType(ActorType::ItemEntity)) item = static_cast<ItemActor&>(inEntity).item();
         fileLogger.log(
-            config.playerPullFishingHookEvent.noOutputContent,
+            config.playerPullFishingHookEvent,
             ti,
             pbd.self,
             "PlayerPullFishingHookEvent",
@@ -862,7 +863,7 @@ LL_TYPE_INSTANCE_HOOK(
         std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
-            config.playerSleepEvent.noOutputContent,
+            config.playerSleepEvent,
             ti,
             pbd.self,
             "PlayerSleepEvent",
@@ -878,6 +879,44 @@ LL_TYPE_INSTANCE_HOOK(
         );
     }
     return origin(pos);
+}
+
+LL_TYPE_INSTANCE_HOOK(
+    PlayerChangeDimensionHook,
+    HookPriority::Normal,
+    Level,
+    &Level::requestPlayerChangeDimension,
+    void,
+    Player&                  player,
+    ChangeDimensionRequest&& changeRequest
+) {
+    std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+    const auto              pbd = getPlayerBaseData(player);
+    fileLogger.log(
+        config.playerChangeDimensionEvent,
+        ti,
+        pbd.self,
+        "PlayerChangeDimensionEvent",
+        pbd.UUID,
+        pbd.dim,
+        pbd.x,
+        pbd.y,
+        pbd.z,
+        "",
+        "",
+        "",
+        "",
+        std::format(
+            "{}: {}; {}: {}",
+            ll::i18n::getInstance()->get("log.info.from", config.locateName),
+            ll::i18n::getInstance()
+                ->get("dim." + std::to_string(static_cast<int>(changeRequest.mFromDimensionId)), config.locateName),
+            ll::i18n::getInstance()->get("log.info.to", config.locateName),
+            ll::i18n::getInstance()
+                ->get("dim." + std::to_string(static_cast<int>(changeRequest.mToDimensionId)), config.locateName)
+        )
+    );
+    origin(player, std::move(changeRequest));
 }
 
 
@@ -938,6 +977,9 @@ void addEventHookListener() {
     if (config.playerSleepEvent.log) {
         PlayerSleepHook::hook();
     }
+    if (config.playerChangeDimensionEvent.log) {
+        PlayerChangeDimensionHook::hook();
+    }
 }
 
 void removeEventHookListener() {
@@ -996,6 +1038,9 @@ void removeEventHookListener() {
     }
     if (config.playerSleepEvent.log) {
         PlayerSleepHook::unhook();
+    }
+    if (config.playerChangeDimensionEvent.log) {
+        PlayerChangeDimensionHook::unhook();
     }
 }
 
