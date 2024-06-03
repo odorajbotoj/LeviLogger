@@ -63,7 +63,7 @@ struct Config {
               .print       = true,
               .printFormat = "<{{self}}> ({{x}}, {{y}}, {{z}}) {{info}}"
     };
-    EventConfigStruct playerChangeDimension = {
+    EventConfigStruct playerChangeDimensionEvent = {
         .print       = true,
         .printFormat = "<{{self}}> ({{x}}, {{y}}, {{z}}) {{event}} {{info}}"
     };

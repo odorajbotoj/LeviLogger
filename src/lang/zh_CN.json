@@ -121,6 +121,6 @@
         "PlayerPullFishingHookEvent": "玩家使用钓鱼竿钓起实体",
         "PlayerSleepEvent": "玩家上床",
         "ExecutingCommandEvent": "玩家执行命令",
-        "PlayerChangeDimension": "玩家切换维度"
+        "PlayerChangeDimensionEvent": "玩家切换维度"
     }
 }

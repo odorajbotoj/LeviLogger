@@ -893,10 +893,10 @@ LL_TYPE_INSTANCE_HOOK(
     std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
     const auto              pbd = getPlayerBaseData(player);
     fileLogger.log(
-        config.playerChangeDimension,
+        config.playerChangeDimensionEvent,
         ti,
         pbd.self,
-        "PlayerChangeDimension",
+        "PlayerChangeDimensionEvent",
         pbd.UUID,
         pbd.dim,
         pbd.x,
@@ -977,7 +977,7 @@ void addEventHookListener() {
     if (config.playerSleepEvent.log) {
         PlayerSleepHook::hook();
     }
-    if (config.playerChangeDimension.log) {
+    if (config.playerChangeDimensionEvent.log) {
         PlayerChangeDimensionHook::hook();
     }
 }
@@ -1039,7 +1039,7 @@ void removeEventHookListener() {
     if (config.playerSleepEvent.log) {
         PlayerSleepHook::unhook();
     }
-    if (config.playerChangeDimension.log) {
+    if (config.playerChangeDimensionEvent.log) {
         PlayerChangeDimensionHook::unhook();
     }
 }
