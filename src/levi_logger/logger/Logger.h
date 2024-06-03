@@ -1,5 +1,7 @@
 #pragma once
 
+#include "levi_logger/Config.h"
+
 #include <filesystem>
 #include <fstream>
 #include <string>
@@ -25,19 +27,19 @@ public:
     void setFilePath(std::filesystem::path);
     void setMaxLine(unsigned long long int);
     void
-    log(std::vector<std::string>&, // noOutputContent
-        std::pair<std::tm, int>,   // time
-        std::string,               // self
-        std::string,               // event
-        std::string = "",          // self UUID
-        std::string = "",          // dim
-        std::string = "",          // x
-        std::string = "",          // y
-        std::string = "",          // z
-        std::string = "",          // target
-        std::string = "",          // tx
-        std::string = "",          // ty
-        std::string = "",          // tz
-        std::string = "");         // info
+    log(EventConfigStruct&,      // conf
+        std::pair<std::tm, int>, // time
+        std::string,             // self
+        std::string,             // event
+        std::string = "",        // self UUID
+        std::string = "",        // dim
+        std::string = "",        // x
+        std::string = "",        // y
+        std::string = "",        // z
+        std::string = "",        // target
+        std::string = "",        // tx
+        std::string = "",        // ty
+        std::string = "",        // tz
+        std::string = "");       // info
 };
 } // namespace levi_logger::logger
