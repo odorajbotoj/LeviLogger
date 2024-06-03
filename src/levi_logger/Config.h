@@ -3,57 +3,68 @@
 #include <string>
 #include <vector>
 
-namespace {
-struct EventStruct {
+struct EventConfigStruct {
     bool                     log             = true;
+    bool                     print           = false;
     std::vector<std::string> noOutputContent = {};
+    std::string              printFormat     = "";
 };
-} // namespace
 
 struct Config {
-    int                    version                     = 1;
-    std::string            locateName                  = "zh_CN";
-    unsigned long long int maxLine                     = 50000;
-    ::EventStruct          playerAddExperienceEvent    = {};
-    ::EventStruct          playerAttackEvent           = {};
-    ::EventStruct          playerChangePermEvent       = {};
-    ::EventStruct          playerChatEvent             = {};
-    ::EventStruct          playerConnectEvent          = {};
-    ::EventStruct          playerDestroyBlockEvent     = {};
-    ::EventStruct          playerDieEvent              = {};
-    ::EventStruct          playerInteractBlockEvent    = {};
-    ::EventStruct          playerJoinEvent             = {};
-    ::EventStruct          playerJumpEvent             = {false};
-    ::EventStruct          playerLeaveEvent            = {};
-    ::EventStruct          playerPickUpItemEvent       = {};
-    ::EventStruct          playerPlacingBlockEvent     = {};
-    ::EventStruct          playerPlacedBlockEvent      = {};
-    ::EventStruct          playerRespawnEvent          = {};
-    ::EventStruct          playerSneakingEvent         = {false};
-    ::EventStruct          playerSneakedEvent          = {false};
-    ::EventStruct          playerSprintingEvent        = {false};
-    ::EventStruct          playerSprintedEvent         = {false};
-    ::EventStruct          playerSwingEvent            = {false};
-    ::EventStruct          playerUseItemEvent          = {};
-    ::EventStruct          playerUseItemOnEvent        = {};
-    ::EventStruct          useFrameBlockEvent          = {};
-    ::EventStruct          entityExplodeEvent          = {};
-    ::EventStruct          blockExplodeEvent           = {};
-    ::EventStruct          respawnAnchorExplodeEvent   = {};
-    ::EventStruct          blockExplodedEvent          = {};
-    ::EventStruct          commandBlockExecuteEvent    = {};
-    ::EventStruct          projectileHitBlockEvent     = {false};
-    ::EventStruct          mobDieEvent                 = {false};
-    ::EventStruct          actorHurtEvent              = {false};
-    ::EventStruct          projectileHitEntityEvent    = {false};
-    ::EventStruct          witherDestroyEvent          = {false};
-    ::EventStruct          pistonPushEvent             = {false};
-    ::EventStruct          farmDecayEvent              = {};
-    ::EventStruct          playerDropItemEvent         = {};
-    ::EventStruct          playerConsumeTotemEvent     = {};
-    ::EventStruct          playerChangeSlotEvent       = {};
-    ::EventStruct          playerSetArmorEvent         = {};
-    ::EventStruct          playerUseRespawnAnchorEvent = {};
-    ::EventStruct          playerPullFishingHookEvent  = {};
-    ::EventStruct          playerSleepEvent            = {};
+    int                    version                  = 2;
+    std::string            locateName               = "zh_CN";
+    unsigned long long int maxLine                  = 50000;
+    EventConfigStruct      playerAddExperienceEvent = {};
+    EventConfigStruct      playerAttackEvent        = {};
+    EventConfigStruct      playerChangePermEvent    = {};
+    EventConfigStruct playerChatEvent    = {.print = true, .printFormat = "<{{self}}> ({{x}}, {{y}}, {{z}}) {{info}}"};
+    EventConfigStruct playerConnectEvent = {};
+    EventConfigStruct playerDestroyBlockEvent  = {};
+    EventConfigStruct playerDieEvent           = {};
+    EventConfigStruct playerInteractBlockEvent = {};
+    EventConfigStruct playerJoinEvent  = {.print = true, .printFormat = "<{{self}}> ({{x}}, {{y}}, {{z}}) {{event}}"};
+    EventConfigStruct playerJumpEvent  = {.log = false};
+    EventConfigStruct playerLeaveEvent = {};
+    EventConfigStruct playerPickUpItemEvent     = {};
+    EventConfigStruct playerPlacingBlockEvent   = {};
+    EventConfigStruct playerPlacedBlockEvent    = {};
+    EventConfigStruct playerRespawnEvent        = {};
+    EventConfigStruct playerSneakingEvent       = {.log = false};
+    EventConfigStruct playerSneakedEvent        = {.log = false};
+    EventConfigStruct playerSprintingEvent      = {.log = false};
+    EventConfigStruct playerSprintedEvent       = {.log = false};
+    EventConfigStruct playerSwingEvent          = {.log = false};
+    EventConfigStruct playerUseItemEvent        = {};
+    EventConfigStruct playerUseItemOnEvent      = {};
+    EventConfigStruct useFrameBlockEvent        = {};
+    EventConfigStruct entityExplodeEvent        = {};
+    EventConfigStruct blockExplodeEvent         = {};
+    EventConfigStruct respawnAnchorExplodeEvent = {};
+    EventConfigStruct blockExplodedEvent        = {};
+    EventConfigStruct commandBlockExecuteEvent  = {
+         .print       = true,
+         .printFormat = "<{{self}}> ({{x}}, {{y}}, {{z}}) {{info}}"
+    };
+    EventConfigStruct projectileHitBlockEvent     = {.log = false};
+    EventConfigStruct mobDieEvent                 = {.log = false};
+    EventConfigStruct actorHurtEvent              = {.log = false};
+    EventConfigStruct projectileHitEntityEvent    = {.log = false};
+    EventConfigStruct witherDestroyEvent          = {.log = false};
+    EventConfigStruct pistonPushEvent             = {.log = false};
+    EventConfigStruct farmDecayEvent              = {};
+    EventConfigStruct playerDropItemEvent         = {};
+    EventConfigStruct playerConsumeTotemEvent     = {};
+    EventConfigStruct playerChangeSlotEvent       = {};
+    EventConfigStruct playerSetArmorEvent         = {};
+    EventConfigStruct playerUseRespawnAnchorEvent = {};
+    EventConfigStruct playerPullFishingHookEvent  = {};
+    EventConfigStruct playerSleepEvent            = {};
+    EventConfigStruct executingCommandEvent       = {
+              .print       = true,
+              .printFormat = "<{{self}}> ({{x}}, {{y}}, {{z}}) {{info}}"
+    };
+    EventConfigStruct playerChangeDimension = {
+        .print       = true,
+        .printFormat = "<{{self}}> ({{x}}, {{y}}, {{z}}) {{event}} {{info}}"
+    };
 };

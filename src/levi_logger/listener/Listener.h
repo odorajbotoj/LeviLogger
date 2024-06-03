@@ -12,7 +12,7 @@ struct PlayerBaseData {
     std::string y;    // y
     std::string z;    // z
 };
-const PlayerBaseData getPlayerBaseData(Player&);
+const PlayerBaseData getPlayerBaseData(const Player&);
 
 namespace levi_logger::listener {
 

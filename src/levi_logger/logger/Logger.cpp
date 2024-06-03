@@ -1,6 +1,8 @@
 #include "levi_logger/logger/Logger.h"
+#include "levi_logger/Config.h"
 #include "levi_logger/LeviLogger.h"
 
+#include "ll/api/Logger.h"
 #include "ll/api/i18n/I18n.h"
 #include "ll/api/utils/WinUtils.h"
 
@@ -84,32 +86,32 @@ void Logger::setFilePath(std::filesystem::path fp) {
 void Logger::setMaxLine(unsigned long long int ml) { maxLine = ml; }
 
 void Logger::log(
-    std::vector<std::string>& noOutputContent, // noOutputContent
-    std::pair<std::tm, int>   ti,              // time
-    std::string               self,            // self
-    std::string               event,           // event
-    std::string               selfUUID,        // self UUID
-    std::string               dim,             // dim
-    std::string               x,               // x
-    std::string               y,               // y
-    std::string               z,               // z
-    std::string               target,          // target
-    std::string               tx,              // tx
-    std::string               ty,              // ty
-    std::string               tz,              // tz
-    std::string               info             // info
+    EventConfigStruct&      conf,     // conf
+    std::pair<std::tm, int> ti,       // time
+    std::string             self,     // self
+    std::string             event,    // event
+    std::string             selfUUID, // self UUID
+    std::string             dim,      // dim
+    std::string             x,        // x
+    std::string             y,        // y
+    std::string             z,        // z
+    std::string             target,   // target
+    std::string             tx,       // target x
+    std::string             ty,       // target y
+    std::string             tz,       // tatget z
+    std::string             info      // info
 ) {
     if (currentLine >= maxLine) rotate();
-    info = ::subreplace(info, "\"", "\"\"");
+    std::string logInfo = ::subreplace(info, "\"", "\"\"");
     std::string content =
         std::to_string(ti.first.tm_year + 1900) + "," + std::to_string(ti.first.tm_mon + 1) + ","
         + std::to_string(ti.first.tm_mday) + "," + std::to_string(ti.first.tm_hour) + ","
         + std::to_string(ti.first.tm_min) + "," + std::to_string(ti.first.tm_sec) + "," + std::to_string(ti.second)
         + "," + self + "," + std::string{ll::i18n::getInstance()->get("event." + event, config.locateName)} + ","
         + selfUUID + "," + std::string{ll::i18n::getInstance()->get("dim." + dim, config.locateName)} + "," + x + ","
-        + y + "," + z + "," + target + "," + tx + "," + ty + "," + tz + ",\"" + info + "\"";
+        + y + "," + z + "," + target + "," + tx + "," + ty + "," + tz + ",\"" + logInfo + "\"";
     bool output = true;
-    for (auto iter = noOutputContent.begin(); iter != noOutputContent.end(); ++iter) {
+    for (auto iter = conf.noOutputContent.begin(); iter != conf.noOutputContent.end(); ++iter) {
         if (auto pos = content.find(*iter); pos != std::string::npos) {
             output = false;
             break;
@@ -118,6 +120,30 @@ void Logger::log(
     if (file.is_open() && output) {
         file << content << std::endl;
         currentLine++;
+    }
+    if (output && conf.print) {
+        ll::Logger  logger("LeviLogger");
+        std::string printContent = ::subreplace(conf.printFormat, "{{self}}", self);
+        printContent             = ::subreplace(
+            printContent,
+            "{{event}}",
+            std::string{ll::i18n::getInstance()->get("event." + event, config.locateName)}
+        );
+        printContent = ::subreplace(printContent, "{{selfUUID}}", selfUUID);
+        printContent = ::subreplace(
+            printContent,
+            "{{dim}}",
+            std::string{ll::i18n::getInstance()->get("dim." + dim, config.locateName)}
+        );
+        printContent = ::subreplace(printContent, "{{x}}", x);
+        printContent = ::subreplace(printContent, "{{y}}", y);
+        printContent = ::subreplace(printContent, "{{z}}", z);
+        printContent = ::subreplace(printContent, "{{target}}", target);
+        printContent = ::subreplace(printContent, "{{tx}}", tx);
+        printContent = ::subreplace(printContent, "{{ty}}", ty);
+        printContent = ::subreplace(printContent, "{{tz}}", tz);
+        printContent = ::subreplace(printContent, "{{info}}", info);
+        logger.info(printContent);
     }
 }
 

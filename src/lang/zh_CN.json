@@ -119,6 +119,8 @@
         "PlayerSetArmorEvent": "玩家改变盔甲栏",
         "PlayerUseRespawnAnchorEvent": "玩家使用重生锚",
         "PlayerPullFishingHookEvent": "玩家使用钓鱼竿钓起实体",
-        "PlayerSleepEvent": "玩家上床"
+        "PlayerSleepEvent": "玩家上床",
+        "ExecutingCommandEvent": "玩家执行命令",
+        "PlayerChangeDimension": "玩家切换维度"
     }
 }
