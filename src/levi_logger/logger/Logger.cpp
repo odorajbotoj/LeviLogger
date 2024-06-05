@@ -102,14 +102,16 @@ void Logger::log(
     std::string             info      // info
 ) {
     if (currentLine >= maxLine) rotate();
-    std::string logInfo = ::subreplace(info, "\"", "\"\"");
+    std::string logSelf   = ::subreplace(self, "\"", "\"\"");
+    std::string logTarget = ::subreplace(target, "\"", "\"\"");
+    std::string logInfo   = ::subreplace(info, "\"", "\"\"");
     std::string content =
         std::to_string(ti.first.tm_year + 1900) + "," + std::to_string(ti.first.tm_mon + 1) + ","
         + std::to_string(ti.first.tm_mday) + "," + std::to_string(ti.first.tm_hour) + ","
         + std::to_string(ti.first.tm_min) + "," + std::to_string(ti.first.tm_sec) + "," + std::to_string(ti.second)
-        + "," + self + "," + std::string{ll::i18n::getInstance()->get("event." + event, config.locateName)} + ","
+        + ",\"" + logSelf + "\"," + std::string{ll::i18n::getInstance()->get("event." + event, config.locateName)} + ","
         + selfUUID + "," + std::string{ll::i18n::getInstance()->get("dim." + dim, config.locateName)} + "," + x + ","
-        + y + "," + z + "," + target + "," + tx + "," + ty + "," + tz + ",\"" + logInfo + "\"";
+        + y + "," + z + ",\"" + logTarget + "\"," + tx + "," + ty + "," + tz + ",\"" + logInfo + "\"";
     bool output = true;
     for (auto iter = conf.noOutputContent.begin(); iter != conf.noOutputContent.end(); ++iter) {
         if (auto pos = content.find(*iter); pos != std::string::npos) {
