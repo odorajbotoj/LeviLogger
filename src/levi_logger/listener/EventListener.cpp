@@ -30,7 +30,6 @@
 #include "ll/api/event/player/PlayerSprintEvent.h"
 #include "ll/api/event/player/PlayerSwingEvent.h"
 #include "ll/api/event/player/PlayerUseItemEvent.h"
-#include "ll/api/event/player/PlayerUseItemOnEvent.h"
 
 #include "magic_enum.hpp"
 #include "mc/world/actor/Actor.h"
@@ -262,7 +261,7 @@ void addEventListener() {
                                                                           ) {
                 std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
                 const auto              pbd  = getPlayerBaseData(event.self());
-                const auto              bpos = event.pos();
+                const auto              bpos = event.blockPos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
                 fileLogger.log(
                     config.playerInteractBlockEvent,
@@ -570,49 +569,6 @@ void addEventListener() {
                         it.mCount,
                         ll::i18n::getInstance()->get("log.info.aux", config.locateName),
                         it.getAuxValue()
-                    )
-                );
-            });
-    }
-
-    if (config.playerUseItemOnEvent.log) {
-        ::playerUseItemOnEventListener =
-            eventBus.emplaceListener<ll::event::PlayerUseItemOnEvent>([](ll::event::PlayerUseItemOnEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
-                const auto              pbd  = getPlayerBaseData(event.self());
-                const auto              bpos = event.blockPos();
-                const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
-                const auto  fpos  = event.clickPos();
-                const auto  it    = event.item();
-                fileLogger.log(
-                    config.playerUseItemOnEvent,
-                    ti,
-                    pbd.self,
-                    "PlayerUseItemOnEvent",
-                    pbd.UUID,
-                    pbd.dim,
-                    pbd.x,
-                    pbd.y,
-                    pbd.z,
-                    block.buildDescriptionName() + "(" + block.getTypeName() + ")",
-                    std::to_string(bpos.x),
-                    std::to_string(bpos.y),
-                    std::to_string(bpos.z),
-                    std::format(
-                        "{}: {}({}); {}: {}; {}: {}; {}: {}; {}: {} {} {}",
-                        ll::i18n::getInstance()->get("log.info.item", config.locateName),
-                        it.getCustomName().empty() ? it.getName() : it.getCustomName(),
-                        it.getTypeName(),
-                        ll::i18n::getInstance()->get("log.info.count", config.locateName),
-                        it.mCount,
-                        ll::i18n::getInstance()->get("log.info.aux", config.locateName),
-                        it.getAuxValue(),
-                        ll::i18n::getInstance()->get("log.info.face", config.locateName),
-                        ll::i18n::getInstance()->get("side." + std::to_string((schar)event.face()), config.locateName),
-                        ll::i18n::getInstance()->get("log.info.clickPos", config.locateName),
-                        fpos.x,
-                        fpos.y,
-                        fpos.z
                     )
                 );
             });
