@@ -743,7 +743,7 @@ LL_TYPE_INSTANCE_HOOK(
     ArmorSlot        armorSlot,
     ItemStack const& item
 ) {
-    if (config.playerSetArmorEvent.log) {
+    if (config.playerSetArmorEvent.log && !item.isNull()) {
         std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
