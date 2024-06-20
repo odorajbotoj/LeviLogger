@@ -99,7 +99,6 @@
         "PlayerSprintedEvent": "玩家退出疾跑状态",
         "PlayerSwingEvent": "玩家挥手(Swing)",
         "PlayerUseItemEvent": "玩家使用物品",
-        "PlayerUseItemOnEvent": "玩家对方块使用物品",
         "UseFrameBlockEvent": "操作物品展示框",
         "EntityExplodeEvent": "发生由实体引起的爆炸",
         "BlockExplodeEvent": "发生由方块引起的爆炸",

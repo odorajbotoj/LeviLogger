@@ -11,7 +11,7 @@ struct EventConfigStruct {
 };
 
 struct Config {
-    int                    version                  = 2;
+    int                    version                  = 3;
     std::string            locateName               = "zh_CN";
     unsigned long long int maxLine                  = 50000;
     EventConfigStruct      playerAddExperienceEvent = {};
@@ -35,7 +35,6 @@ struct Config {
     EventConfigStruct playerSprintedEvent       = {.log = false};
     EventConfigStruct playerSwingEvent          = {.log = false};
     EventConfigStruct playerUseItemEvent        = {};
-    EventConfigStruct playerUseItemOnEvent      = {};
     EventConfigStruct useFrameBlockEvent        = {};
     EventConfigStruct entityExplodeEvent        = {};
     EventConfigStruct blockExplodeEvent         = {};
