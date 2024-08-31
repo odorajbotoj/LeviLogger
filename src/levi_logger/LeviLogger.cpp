@@ -8,8 +8,8 @@
 
 #include "ll/api/Config.h"
 #include "ll/api/i18n/I18n.h"
-#include "ll/api/plugin/NativePlugin.h"
-#include "ll/api/plugin/RegisterHelper.h"
+#include "ll/api/mod/NativeMod.h"
+#include "ll/api/mod/RegisterHelper.h"
 
 Config config;
 
@@ -46,11 +46,11 @@ bool LeviLogger::load() {
     fileLogger.setFilePath(getSelf().getDataDir() / "log");
     fileLogger.setMaxLine(config.maxLine);
     if (!fileLogger.rotate()) {
-        logger.error(ll::i18n::getInstance()->get("plugin.cannotOpenLogFile", config.locateName));
+        logger.error(ll::i18n::getInstance()->get("mod.cannotOpenLogFile", config.locateName));
         return false;
     }
 
-    logger.info(ll::i18n::getInstance()->get("plugin.welcome", config.locateName));
+    logger.info(ll::i18n::getInstance()->get("mod.welcome", config.locateName));
     return true;
 }
 
@@ -72,4 +72,4 @@ bool LeviLogger::disable() {
 
 } // namespace levi_logger
 
-LL_REGISTER_PLUGIN(levi_logger::LeviLogger, levi_logger::instance);
+LL_REGISTER_MOD(levi_logger::LeviLogger, levi_logger::instance);

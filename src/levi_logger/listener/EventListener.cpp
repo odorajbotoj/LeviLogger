@@ -4,7 +4,7 @@
 #include "levi_logger/logger/Logger.h"
 
 #include "ll/api/i18n/I18n.h"
-#include "ll/api/utils/WinUtils.h"
+#include "ll/api/utils/SystemUtils.h"
 
 #include "ll/api/event/EventBus.h"
 #include "ll/api/event/ListenerBase.h"
@@ -78,7 +78,7 @@ void addEventListener() {
         ::playerAddExperienceEventListener =
             eventBus.emplaceListener<ll::event::PlayerAddExperienceEvent>([](ll::event::PlayerAddExperienceEvent& event
                                                                           ) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerAddExperienceEvent,
@@ -97,7 +97,7 @@ void addEventListener() {
     if (config.playerAttackEvent.log) {
         ::playerAttackEventListener =
             eventBus.emplaceListener<ll::event::PlayerAttackEvent>([](ll::event::PlayerAttackEvent& event) {
-                std::pair<std::tm, int> ti        = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti        = ll::sys_utils::getLocalTime();
                 const auto              pbd       = getPlayerBaseData(event.self());
                 auto&                   target    = event.target();
                 auto                    targetPos = target.getFeetPos();
@@ -122,7 +122,7 @@ void addEventListener() {
     if (config.playerChangePermEvent.log) {
         ::playerChangePermEventListener =
             eventBus.emplaceListener<ll::event::PlayerChangePermEvent>([](ll::event::PlayerChangePermEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerChangePermEvent,
@@ -150,7 +150,7 @@ void addEventListener() {
     if (config.playerChatEvent.log) {
         ::playerChatEventListener =
             eventBus.emplaceListener<ll::event::PlayerChatEvent>([](ll::event::PlayerChatEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerChatEvent,
@@ -178,7 +178,7 @@ void addEventListener() {
     if (config.playerConnectEvent.log) {
         ::playerConnectEventListener =
             eventBus.emplaceListener<ll::event::PlayerConnectEvent>([](ll::event::PlayerConnectEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerConnectEvent,
@@ -197,7 +197,7 @@ void addEventListener() {
     if (config.playerDestroyBlockEvent.log) {
         ::playerDestroyBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerDestroyBlockEvent>([](ll::event::PlayerDestroyBlockEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti   = ll::sys_utils::getLocalTime();
                 const auto              pbd  = getPlayerBaseData(event.self());
                 const auto              bpos = event.pos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
@@ -222,7 +222,7 @@ void addEventListener() {
     if (config.playerDieEvent.log) {
         ::playerDieEventListener =
             eventBus.emplaceListener<ll::event::PlayerDieEvent>([](ll::event::PlayerDieEvent& event) {
-                std::pair<std::tm, int> ti     = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti     = ll::sys_utils::getLocalTime();
                 const auto              pbd    = getPlayerBaseData(event.self());
                 Actor*                  source = nullptr;
                 if (event.source().isEntitySource()) {
@@ -259,7 +259,7 @@ void addEventListener() {
         ::playerInteractBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerInteractBlockEvent>([](ll::event::PlayerInteractBlockEvent& event
                                                                           ) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti   = ll::sys_utils::getLocalTime();
                 const auto              pbd  = getPlayerBaseData(event.self());
                 const auto              bpos = event.blockPos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
@@ -284,7 +284,7 @@ void addEventListener() {
     if (config.playerJoinEvent.log) {
         ::playerJoinEventListener = eventBus.emplaceListener<ll::event::PlayerJoinEvent>([](ll::event::PlayerJoinEvent&
                                                                                                 event) {
-            std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+            std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
             const auto              pbd = getPlayerBaseData(event.self());
             fileLogger
                 .log(config.playerJoinEvent, ti, pbd.self, "PlayerJoinEvent", pbd.UUID, pbd.dim, pbd.x, pbd.y, pbd.z);
@@ -294,7 +294,7 @@ void addEventListener() {
     if (config.playerJumpEvent.log) {
         ::playerJumpEventListener = eventBus.emplaceListener<ll::event::PlayerJumpEvent>([](ll::event::PlayerJumpEvent&
                                                                                                 event) {
-            std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+            std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
             const auto              pbd = getPlayerBaseData(event.self());
             fileLogger
                 .log(config.playerJumpEvent, ti, pbd.self, "PlayerJumpEvent", pbd.UUID, pbd.dim, pbd.x, pbd.y, pbd.z);
@@ -304,7 +304,7 @@ void addEventListener() {
     if (config.playerLeaveEvent.log) {
         ::playerLeaveEventListener =
             eventBus.emplaceListener<ll::event::PlayerLeaveEvent>([](ll::event::PlayerLeaveEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerLeaveEvent,
@@ -323,7 +323,7 @@ void addEventListener() {
     if (config.playerPickUpItemEvent.log) {
         ::playerPickUpItemEventListener =
             eventBus.emplaceListener<ll::event::PlayerPickUpItemEvent>([](ll::event::PlayerPickUpItemEvent& event) {
-                std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti    = ll::sys_utils::getLocalTime();
                 const auto              pbd   = getPlayerBaseData(event.self());
                 const auto&             ita   = event.itemActor();
                 const auto              itafp = ita.getFeetPos();
@@ -356,7 +356,7 @@ void addEventListener() {
     if (config.playerPlacingBlockEvent.log) {
         ::playerPlacingBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerPlacingBlockEvent>([](ll::event::PlayerPlacingBlockEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti   = ll::sys_utils::getLocalTime();
                 const auto              pbd  = getPlayerBaseData(event.self());
                 auto                    pos  = event.pos();
                 const auto              face = event.face();
@@ -407,7 +407,7 @@ void addEventListener() {
     if (config.playerPlacedBlockEvent.log) {
         ::playerPlacedBlockEventListener =
             eventBus.emplaceListener<ll::event::PlayerPlacedBlockEvent>([](ll::event::PlayerPlacedBlockEvent& event) {
-                std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti   = ll::sys_utils::getLocalTime();
                 const auto              pbd  = getPlayerBaseData(event.self());
                 const auto              bpos = event.pos();
                 const auto& block = event.self().getDimension().getBlockSourceFromMainChunkSource().getBlock(bpos);
@@ -432,7 +432,7 @@ void addEventListener() {
     if (config.playerRespawnEvent.log) {
         ::playerRespawnEventListener =
             eventBus.emplaceListener<ll::event::PlayerRespawnEvent>([](ll::event::PlayerRespawnEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerRespawnEvent,
@@ -451,7 +451,7 @@ void addEventListener() {
     if (config.playerSneakingEvent.log) {
         ::playerSneakingEventListener =
             eventBus.emplaceListener<ll::event::PlayerSneakingEvent>([](ll::event::PlayerSneakingEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerSneakingEvent,
@@ -470,7 +470,7 @@ void addEventListener() {
     if (config.playerSneakedEvent.log) {
         ::playerSneakedEventListener =
             eventBus.emplaceListener<ll::event::PlayerSneakedEvent>([](ll::event::PlayerSneakedEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerSneakedEvent,
@@ -489,7 +489,7 @@ void addEventListener() {
     if (config.playerSprintingEvent.log) {
         ::playerSprintingEventListener =
             eventBus.emplaceListener<ll::event::PlayerSprintingEvent>([](ll::event::PlayerSprintingEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerSprintingEvent,
@@ -508,7 +508,7 @@ void addEventListener() {
     if (config.playerSprintedEvent.log) {
         ::playerSprintedEventListener =
             eventBus.emplaceListener<ll::event::PlayerSprintedEvent>([](ll::event::PlayerSprintedEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerSprintedEvent,
@@ -527,7 +527,7 @@ void addEventListener() {
     if (config.playerSwingEvent.log) {
         ::playerSwingEventListener =
             eventBus.emplaceListener<ll::event::PlayerSwingEvent>([](ll::event::PlayerSwingEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 fileLogger.log(
                     config.playerSwingEvent,
@@ -546,7 +546,7 @@ void addEventListener() {
     if (config.playerUseItemEvent.log) {
         ::playerUseItemEventListener =
             eventBus.emplaceListener<ll::event::PlayerUseItemEvent>([](ll::event::PlayerUseItemEvent& event) {
-                std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
                 const auto              pbd = getPlayerBaseData(event.self());
                 const auto              it  = event.item();
                 fileLogger.log(
@@ -576,7 +576,7 @@ void addEventListener() {
 
     if (config.mobDieEvent.log) {
         ::mobDieEventListener = eventBus.emplaceListener<ll::event::MobDieEvent>([](ll::event::MobDieEvent& event) {
-            std::pair<std::tm, int> ti     = ll::win_utils::getLocalTime();
+            std::pair<std::tm, int> ti     = ll::sys_utils::getLocalTime();
             const auto&             mob    = event.self();
             const auto              pos    = mob.getFeetPos();
             Actor*                  source = nullptr;
@@ -618,7 +618,7 @@ void addEventListener() {
     if (config.actorHurtEvent.log) {
         ::actorHurtEventListener =
             eventBus.emplaceListener<ll::event::ActorHurtEvent>([](ll::event::ActorHurtEvent& event) {
-                std::pair<std::tm, int> ti     = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti     = ll::sys_utils::getLocalTime();
                 const auto&             actor  = event.self();
                 const auto              pos    = actor.getFeetPos();
                 Actor*                  source = nullptr;
@@ -662,7 +662,7 @@ void addEventListener() {
     if (config.executingCommandEvent.log) {
         ::executingCommandEventListener =
             eventBus.emplaceListener<ll::event::ExecutingCommandEvent>([](ll::event::ExecutingCommandEvent& event) {
-                std::pair<std::tm, int> ti     = ll::win_utils::getLocalTime();
+                std::pair<std::tm, int> ti     = ll::sys_utils::getLocalTime();
                 const Player*           player = static_cast<Player*>(event.commandContext().mOrigin->getEntity());
                 if (player) {
                     const auto pbd = getPlayerBaseData(*player);

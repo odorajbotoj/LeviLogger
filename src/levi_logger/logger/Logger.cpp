@@ -4,9 +4,12 @@
 
 #include "ll/api/Logger.h"
 #include "ll/api/i18n/I18n.h"
-#include "ll/api/utils/WinUtils.h"
+#include "ll/api/utils/StringUtils.h"
+#include "ll/api/utils/SystemUtils.h"
+
 
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <iostream>
 #include <ostream>
@@ -18,21 +21,11 @@
 CSV: RFC 4180
 */
 
-namespace {
-std::string subreplace(std::string str, std::string sub_str, std::string new_str) {
-    for (std::string::size_type pos(0); pos != std::string::npos; pos += new_str.length()) {
-        if ((pos = str.find(sub_str, pos)) != std::string::npos) str.replace(pos, sub_str.length(), new_str);
-        else break;
-    }
-    return str;
-}
-} // namespace
-
 namespace levi_logger::logger {
 
 bool Logger::rotate() {
     if (file.is_open()) file.close();
-    std::pair<std::tm, int> ti = ll::win_utils::getLocalTime();
+    std::pair<std::tm, int> ti = ll::sys_utils::getLocalTime();
     file.open(
         filePath
             / std::format(
@@ -102,16 +95,31 @@ void Logger::log(
     std::string             info      // info
 ) {
     if (currentLine >= maxLine) rotate();
-    std::string logSelf   = ::subreplace(self, "\"", "\"\"");
-    std::string logTarget = ::subreplace(target, "\"", "\"\"");
-    std::string logInfo   = ::subreplace(info, "\"", "\"\"");
-    std::string content =
-        std::to_string(ti.first.tm_year + 1900) + "," + std::to_string(ti.first.tm_mon + 1) + ","
-        + std::to_string(ti.first.tm_mday) + "," + std::to_string(ti.first.tm_hour) + ","
-        + std::to_string(ti.first.tm_min) + "," + std::to_string(ti.first.tm_sec) + "," + std::to_string(ti.second)
-        + ",\"" + logSelf + "\"," + std::string{ll::i18n::getInstance()->get("event." + event, config.locateName)} + ","
-        + selfUUID + "," + std::string{ll::i18n::getInstance()->get("dim." + dim, config.locateName)} + "," + x + ","
-        + y + "," + z + ",\"" + logTarget + "\"," + tx + "," + ty + "," + tz + ",\"" + logInfo + "\"";
+    std::string logSelf   = ll::string_utils::replaceAll(self, "\"", "\"\"");
+    std::string logTarget = ll::string_utils::replaceAll(target, "\"", "\"\"");
+    std::string logInfo   = ll::string_utils::replaceAll(info, "\"", "\"\"");
+    std::string content   = std::format(
+        "{},{},{},{},{},{},{},\"{}\",{},{},{},{},{},{},\"{}\",{},{},{},\"{}\"",
+        ti.first.tm_year + 1900,
+        ti.first.tm_mon + 1,
+        ti.first.tm_mday,
+        ti.first.tm_hour,
+        ti.first.tm_min,
+        ti.first.tm_sec,
+        ti.second,
+        logSelf,
+        ll::i18n::getInstance()->get("event." + event, config.locateName),
+        selfUUID,
+        ll::i18n::getInstance()->get("dim." + dim, config.locateName),
+        x,
+        y,
+        z,
+        logTarget,
+        tx,
+        ty,
+        tz,
+        logInfo
+    );
     bool output = true;
     for (auto iter = conf.noOutputContent.begin(); iter != conf.noOutputContent.end(); ++iter) {
         if (auto pos = content.find(*iter); pos != std::string::npos) {
@@ -125,26 +133,26 @@ void Logger::log(
     }
     if (output && conf.print) {
         ll::Logger  logger("LeviLogger");
-        std::string printContent = ::subreplace(conf.printFormat, "{{self}}", self);
-        printContent             = ::subreplace(
+        std::string printContent = ll::string_utils::replaceAll(conf.printFormat, "{{self}}", self);
+        printContent             = ll::string_utils::replaceAll(
             printContent,
             "{{event}}",
             std::string{ll::i18n::getInstance()->get("event." + event, config.locateName)}
         );
-        printContent = ::subreplace(printContent, "{{selfUUID}}", selfUUID);
-        printContent = ::subreplace(
+        printContent = ll::string_utils::replaceAll(printContent, "{{selfUUID}}", selfUUID);
+        printContent = ll::string_utils::replaceAll(
             printContent,
             "{{dim}}",
             std::string{ll::i18n::getInstance()->get("dim." + dim, config.locateName)}
         );
-        printContent = ::subreplace(printContent, "{{x}}", x);
-        printContent = ::subreplace(printContent, "{{y}}", y);
-        printContent = ::subreplace(printContent, "{{z}}", z);
-        printContent = ::subreplace(printContent, "{{target}}", target);
-        printContent = ::subreplace(printContent, "{{tx}}", tx);
-        printContent = ::subreplace(printContent, "{{ty}}", ty);
-        printContent = ::subreplace(printContent, "{{tz}}", tz);
-        printContent = ::subreplace(printContent, "{{info}}", info);
+        printContent = ll::string_utils::replaceAll(printContent, "{{x}}", x);
+        printContent = ll::string_utils::replaceAll(printContent, "{{y}}", y);
+        printContent = ll::string_utils::replaceAll(printContent, "{{z}}", z);
+        printContent = ll::string_utils::replaceAll(printContent, "{{target}}", target);
+        printContent = ll::string_utils::replaceAll(printContent, "{{tx}}", tx);
+        printContent = ll::string_utils::replaceAll(printContent, "{{ty}}", ty);
+        printContent = ll::string_utils::replaceAll(printContent, "{{tz}}", tz);
+        printContent = ll::string_utils::replaceAll(printContent, "{{info}}", info);
         logger.info(printContent);
     }
 }
