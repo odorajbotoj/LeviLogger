@@ -1,5 +1,5 @@
 {
-    "plugin": {
+    "mod": {
         "cannotOpenLogFile": "cannot open log file",
         "welcome": "Welcome!"
     },

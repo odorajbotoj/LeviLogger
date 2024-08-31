@@ -4,7 +4,7 @@
 #include "levi_logger/logger/Logger.h"
 
 #include "ll/api/i18n/I18n.h"
-#include "ll/api/utils/WinUtils.h"
+#include "ll/api/utils/SystemUtils.h"
 
 #include "ll/api/memory/Hook.h"
 
@@ -124,7 +124,7 @@ LL_TYPE_INSTANCE_HOOK(
     uchar           face
 ) {
     if (config.useFrameBlockEvent.log) {
-        std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti    = ll::sys_utils::getLocalTime();
         const auto              pbd   = getPlayerBaseData(player);
         const auto&             block = player.getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
         fileLogger.log(
@@ -158,7 +158,7 @@ LL_TYPE_INSTANCE_HOOK(
     BlockPos const& pos
 ) {
     if (config.useFrameBlockEvent.log) {
-        std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti    = ll::sys_utils::getLocalTime();
         const auto              pbd   = getPlayerBaseData(*player);
         const auto&             block = player->getDimension().getBlockSourceFromMainChunkSource().getBlock(pos);
         fileLogger.log(
@@ -196,7 +196,7 @@ LL_TYPE_INSTANCE_HOOK(
     bool         allowUnderwater
 ) {
     if (config.entityExplodeEvent.log && source) {
-        std::pair<std::tm, int> ti = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti = ll::sys_utils::getLocalTime();
         fileLogger.log(
             config.entityExplodeEvent,
             ti,
@@ -243,7 +243,7 @@ LL_TYPE_INSTANCE_HOOK(
     bool         allowUnderwater
 ) {
     if (config.blockExplodeEvent.log) {
-        std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti    = ll::sys_utils::getLocalTime();
         const auto&             block = region.getBlock(pos);
         fileLogger.log(
             config.blockExplodeEvent,
@@ -287,7 +287,7 @@ LL_TYPE_STATIC_HOOK(
     Level&          level
 ) {
     if (config.respawnAnchorExplodeEvent.log) {
-        std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(player);
         fileLogger.log(
             config.respawnAnchorExplodeEvent,
@@ -319,7 +319,7 @@ LL_TYPE_INSTANCE_HOOK(
     Actor*          entitySource
 ) {
     if (config.blockExplodedEvent.log) {
-        std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti    = ll::sys_utils::getLocalTime();
         const auto&             block = region.getBlock(pos);
         fileLogger.log(
             config.blockExplodedEvent,
@@ -359,7 +359,7 @@ LL_TYPE_INSTANCE_HOOK(
 ) {
     if (config.commandBlockExecuteEvent.log) {
         if (commandOrigin.getOriginType() == CommandOriginType::MinecartCommandBlock) {
-            std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+            std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
             const auto&             pos = commandOrigin.getEntity()->getPosition();
             fileLogger.log(
                 config.commandBlockExecuteEvent,
@@ -382,7 +382,7 @@ LL_TYPE_INSTANCE_HOOK(
                 )
             );
         } else {
-            std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+            std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
             const auto              pos = commandOrigin.getBlockPosition();
             fileLogger.log(
                 config.commandBlockExecuteEvent,
@@ -421,7 +421,7 @@ LL_TYPE_INSTANCE_HOOK(
 ) {
     if (config.projectileHitBlockEvent.log) {
         if (pos != BlockPos::ZERO && !this->isAir()) {
-            std::pair<std::tm, int> ti             = ll::win_utils::getLocalTime();
+            std::pair<std::tm, int> ti             = ll::sys_utils::getLocalTime();
             const auto&             block          = region.getBlock(pos);
             const auto              projectile_pos = projectile.getFeetPos();
             fileLogger.log(
@@ -456,7 +456,7 @@ LL_TYPE_INSTANCE_HOOK(
     if (config.projectileHitEntityEvent.log) {
         const auto* target = res.getEntity();
         if (target) {
-            std::pair<std::tm, int> ti         = ll::win_utils::getLocalTime();
+            std::pair<std::tm, int> ti         = ll::sys_utils::getLocalTime();
             const auto              owner_pos  = owner.getFeetPos();
             const auto              target_pos = target->getFeetPos();
             fileLogger.log(
@@ -492,7 +492,7 @@ LL_TYPE_INSTANCE_HOOK(
     WitherBoss::WitherAttackType type
 ) {
     if (config.witherDestroyEvent.log) {
-        std::pair<std::tm, int> ti       = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti       = ll::sys_utils::getLocalTime();
         const auto              min_pos  = bb.min;
         const auto              max_pos  = bb.max;
         const auto              boss_pos = this->getFeetPos();
@@ -540,7 +540,7 @@ LL_TYPE_INSTANCE_HOOK(
     bool shouldPush = origin(region, curPos, curBranchFacing, pistonMoveFacing);
     if (config.pistonPushEvent.log) {
         if (shouldPush) {
-            std::pair<std::tm, int> ti    = ll::win_utils::getLocalTime();
+            std::pair<std::tm, int> ti    = ll::sys_utils::getLocalTime();
             const auto              pos   = this->getPosition();
             const auto&             block = region.getLevel()
                                     .getOrCreateDimension(region.getDimensionId())
@@ -578,7 +578,7 @@ LL_TYPE_INSTANCE_HOOK(
     float           fallDistance
 ) {
     if (config.farmDecayEvent.log) {
-        std::pair<std::tm, int> ti = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti = ll::sys_utils::getLocalTime();
         fileLogger.log(
             config.farmDecayEvent,
             ti,
@@ -608,7 +608,7 @@ LL_TYPE_INSTANCE_HOOK(
     bool             randomly
 ) {
     if (config.playerDropItemEvent.log) {
-        std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
             config.playerDropItemEvent,
@@ -649,7 +649,7 @@ LL_TYPE_INSTANCE_HOOK(
         InventorySource source(InventorySourceType::ContainerInventory, ContainerID::Inventory);
         auto&           actions = data.getActions(source);
         if (actions.size() == 1) {
-            std::pair<std::tm, int> ti   = ll::win_utils::getLocalTime();
+            std::pair<std::tm, int> ti   = ll::sys_utils::getLocalTime();
             const auto              pbd  = getPlayerBaseData(player);
             const auto&             item = player.getInventory().getItem(actions[0].mSlot);
             fileLogger.log(
@@ -681,7 +681,7 @@ LL_TYPE_INSTANCE_HOOK(
 
 LL_TYPE_INSTANCE_HOOK(PlayerConsumeTotemHook, HookPriority::Normal, Player, "?consumeTotem@Player@@UEAA_NXZ", bool) {
     if (config.playerConsumeTotemEvent.log) {
-        std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
             config.playerConsumeTotemEvent,
@@ -711,7 +711,7 @@ LL_TYPE_INSTANCE_HOOK(
     bool             idk
 ) {
     if (config.playerChangeSlotEvent.log) {
-        std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
             config.playerChangeSlotEvent,
@@ -744,7 +744,7 @@ LL_TYPE_INSTANCE_HOOK(
     ItemStack const& item
 ) {
     if (config.playerSetArmorEvent.log && !item.isNull()) {
-        std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
             config.playerSetArmorEvent,
@@ -786,7 +786,7 @@ LL_TYPE_STATIC_HOOK(
     class Level&    level
 ) {
     if (config.playerUseRespawnAnchorEvent.log) {
-        std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(player);
         fileLogger.log(
             config.playerUseRespawnAnchorEvent,
@@ -817,7 +817,7 @@ LL_TYPE_INSTANCE_HOOK(
     float  inSpeed
 ) {
     if (config.playerPullFishingHookEvent.log && this->getPlayerOwner()) {
-        std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*(this->getPlayerOwner()));
         const auto              pos = inEntity.getFeetPos();
         ItemStack               item;
@@ -860,7 +860,7 @@ LL_TYPE_INSTANCE_HOOK(
     BlockPos const& pos
 ) {
     if (config.playerSleepEvent.log) {
-        std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+        std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
         const auto              pbd = getPlayerBaseData(*this);
         fileLogger.log(
             config.playerSleepEvent,
@@ -890,7 +890,7 @@ LL_TYPE_INSTANCE_HOOK(
     Player&                  player,
     ChangeDimensionRequest&& changeRequest
 ) {
-    std::pair<std::tm, int> ti  = ll::win_utils::getLocalTime();
+    std::pair<std::tm, int> ti  = ll::sys_utils::getLocalTime();
     const auto              pbd = getPlayerBaseData(player);
     fileLogger.log(
         config.playerChangeDimensionEvent,
