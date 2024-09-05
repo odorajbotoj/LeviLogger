@@ -12,7 +12,7 @@
             "logger"
         ]
     },
-    "asset_url": "https://github.com/odorajbotoj/LeviLogger/releases/download/$(version)/LeviLogger-windows-x64.zip",
+    "asset_url": "https://github.com/odorajbotoj/LeviLogger/releases/download/v$(version)/LeviLogger-windows-x64.zip",
     "prerequisites": {
         "github.com/LiteLDev/LeviLamina": ">=0.13.5 <0.14.0"
     },
